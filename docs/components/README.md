@@ -18,6 +18,9 @@ These pages group components by **the decision they serve**. You configure a fam
 | 6 | [Multi-Agent & Memory](06-multi-agent-and-memory.md) | Connected Agents, Memory | How does it scale beyond one scope and one turn? |
 | 7 | [Security & Identity](07-security-and-identity.md) | Authentication, Security & Governance | Who is asking, and what may they see? |
 | 8 | [Lifecycle & Operations](08-alm-and-lifecycle.md) | Environments & Solutions, Testing & Evaluations, Analytics & Monitoring, Publishing & Channels | How does it get to production and stay healthy? |
+| 9 | [Adaptive Cards](09-adaptive-cards.md) | Card JSON, Input elements, Actions, Dynamic cards, Channel rendering | How do I make the conversation visually rich and interactive? |
+| 10 | [ALM Deep Dive](10-alm-deep-dive.md) | Environment setup, Solutions step-by-step, Pipelines, PAC CLI, Git, CI/CD, Versioning, Checklists | How do I manage the full delivery lifecycle end-to-end? |
+| 11 | [VS Code Extension](11-vscode-extension.md) | YAML topics, PAC CLI, Git workflow, CI/CD pipelines, IntelliSense, Feature branch workflow | How do I build agents like a developer with full Git governance? |
 
 ---
 
