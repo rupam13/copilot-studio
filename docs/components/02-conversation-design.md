@@ -26,6 +26,15 @@ A topic is a structured conversation flow built for a specific intent or scenari
 
 **Design rule:** one topic, one outcome. If a topic branches into three genuinely different results, it's three topics.
 
+### ⚠️ Limits & Constraints — Topics
+
+| Limit | Value | Notes |
+|---|---|---|
+| Topics per agent (web) | **1,000 topics** | Hard cap in the Copilot Studio web authoring surface |
+| Topics per agent (Teams) | **250 topics** | Unless plan is upgraded |
+| System topics | Non-deletable | Can be customised but not removed |
+| Topic redirect depth | Avoid deep chains | Circular redirects cause infinite loops; no hard limit but runtime will fail |
+
 ---
 
 ## Trigger Phrases
@@ -46,6 +55,16 @@ Example utterances that teach the agent which topic to activate. They're trainin
 - Under-training. Three phrases gets you a topic that fires only for people who phrase things the way you do.
 
 **In generative orchestration**, trigger phrases matter less — the orchestrator reads topic descriptions and instructions to decide routing. Write a clear topic description regardless; it's doing real work.
+
+### ⚠️ Limits & Constraints — Trigger Phrases
+
+| Limit | Value | Notes |
+|---|---|---|
+| Recommended per topic | **8–15 phrases** | Soft guidance; more is allowed |
+| Practical ceiling | ~50 phrases | Beyond this, split the intent into separate topics |
+| Bulk upload file size | **3 MB** | Max size for bulk trigger phrase import via text file |
+| Overlap detection | None automatic | Overlapping phrases silently misroute; you have to find them via testing |
+| Generative orchestration | Topic description primary | Trigger phrases become secondary signal when generative orchestration is on |
 
 ---
 
@@ -86,6 +105,16 @@ Store and reuse information across a conversation and into workflows.
 - Watch the type contract at flow boundaries — passing a choice value where a string is expected is one of the most common silent failures in Power Automate integration.
 - Clear sensitive variables when the flow that needs them completes.
 
+### ⚠️ Limits & Constraints — Variables
+
+| Limit | Value | Notes |
+|---|---|---|
+| Variable scopes | 4 (Topic, Global, System, Environment) | Scope is set at creation; Topic-scope is the safe default |
+| Type mutability | **Immutable once set** | Type is inferred from first value; you cannot change it without recreating the variable |
+| Environment variables | Read-only at runtime | Set by admins in Power Platform; not editable by the agent at runtime |
+| Session persistence | Single session only (by default) | Variables reset when conversation ends unless you implement cross-session memory |
+| Sensitive value handling | Clear explicitly | No automatic TTL; sensitive data persists until the topic or session ends unless cleared |
+
 ---
 
 ## Entities
@@ -102,6 +131,16 @@ Entities extract **structured values** out of unstructured user text: dates, num
 **Smart matching** lets an entity tolerate typos and near-misses. Enable it for user-typed values, disable it where precision matters more than forgiveness.
 
 **Practical value:** entities are what let you collect three fields from one sentence instead of asking three questions. "I need a laptop for the new hire starting Monday in Pune" can populate item, date and location in a single turn. That's the difference between an agent people use and one they abandon.
+
+### ⚠️ Limits & Constraints — Entities
+
+| Limit | Value | Notes |
+|---|---|---|
+| Entities in one question node | **5 max** | Hard cap on recognition pool per question node |
+| Closed list synonyms | No published cap | Keep synonym lists manageable for performance |
+| Regex complexity | Avoid lookaheads | Complex regex patterns can cause parsing slowdowns |
+| Smart matching tolerance | ~1–2 char edit distance | Enable for typed input; disable where precision is critical (e.g. invoice IDs) |
+| Prebuilt entity coverage | 15+ types | Date/time handles relative expressions ("next Tuesday", "in 3 days") |
 
 ---
 

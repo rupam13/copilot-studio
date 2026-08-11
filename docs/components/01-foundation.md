@@ -85,6 +85,17 @@ No apology padding.
 - **Length has a ceiling.** When instructions exceed roughly a page, you're compensating for bad scope. Split the agent.
 - **Every rule you add is a rule you must test.** Instructions and your evaluation set grow together or your agent silently rots.
 
+### ⚠️ Limits & Constraints — Agent Instructions
+
+| Limit | Value | Notes |
+|---|---|---|
+| Max characters | **8,000 chars** | Hard limit; UI enforces it |
+| Effective token budget | **~2,000–6,000 chars usable** | Total request = instructions + history + tool calls + KB context; payload errors appear before the field limit |
+| Error when exceeded | `OpenAIAdditionalInstructionsLengthExceededLimit` | Can appear even under 8,000 chars if other payload is large |
+| Prompt field (Generative Answer node) | **8,000 chars** | Same cap applies to "Customize your prompt" field inside generative answer nodes |
+
+> **Practical ceiling:** treat ~4,000–5,000 chars as your real working limit to leave headroom for conversation history and tool context. If instructions spill past a screen, the agent scope is too broad — split it.
+
 ---
 
 ## Models
@@ -102,6 +113,15 @@ The model powers reasoning, language understanding and response generation. Copi
 
 For genuinely custom model requirements — fine-tuned models, specialised vision or speech, BYO endpoints — you're crossing into Azure AI Foundry and pro-code territory. See the [Build Path Decision Guide](../guides/build-path-decision.md).
 
+### ⚠️ Limits & Constraints — Models
+
+| Limit | Value | Notes |
+|---|---|---|
+| Model selection | Microsoft-managed tier | No BYO model without Azure AI Foundry + pro-code |
+| Region availability | Varies per model | Check before designing around a capability — not all models available in all regions |
+| Response latency | **2–10 seconds** typical | Heavier models and multi-tool chains push toward the upper bound |
+| Context window | Model-dependent | Copilot Studio manages truncation; very long conversations degrade recall of early turns |
+
 ---
 
 ## Harnesses
@@ -111,6 +131,14 @@ The harness is **how an agent is authored, configured and executed** — the run
 Why it matters in practice: the same underlying model behaves differently depending on the harness around it, because the harness controls the system context, the tool-calling contract, how conversation state is carried, and what guardrails run. This is the concept that explains why "it worked in the playground but not in Teams" is almost never a model problem.
 
 **When this term shows up:** comparing Copilot Studio's managed authoring experience against the M365 Agents Toolkit or a custom orchestrator you write yourself. Copilot Studio gives you a managed harness — less control, far less to maintain. Pro-code gives you the harness itself.
+
+### ⚠️ Limits & Constraints — Harnesses
+
+| Limit | Value | Notes |
+|---|---|---|
+| Managed harness control | Low — Microsoft-defined | System prompt, tool-calling contract and guardrails are platform-managed |
+| Agent customisation without pro-code | Instructions + topics + tools | No direct system prompt override |
+| Pro-code harness (M365 Agents Toolkit) | Full control | All maintenance burden shifts to you |
 
 ---
 

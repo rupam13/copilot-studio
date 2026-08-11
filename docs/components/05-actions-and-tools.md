@@ -29,6 +29,16 @@ Rules:
 - **Make failures legible.** A tool returning `Error 500` gives the model nothing. `No incident found with that number` lets it recover and ask the user.
 - **Confirm before consequence.** Any tool that writes, spends or sends should require explicit user confirmation in the instructions.
 
+### ⚠️ Limits & Constraints — Tools
+
+| Limit | Value | Notes |
+|---|---|---|
+| Tools per agent | No hard cap published | Keep under ~15–20; large tool lists degrade orchestrator accuracy |
+| Tool description length | No hard cap | Aim for 2–4 sentences covering when to use, return value, and what it is NOT for |
+| API calls per connection | **300 calls / 60 sec** | Throttling kicks in silently; design for retries |
+| Action payload size | **100 MB per action** (Express mode) | Effective limit lower due to Base64 encoding overhead |
+| Daily action quota | Plan-dependent | Every action step (including Compose, Initialize Variable) counts toward Power Platform daily quota |
+
 ---
 
 ## Skills
@@ -64,6 +74,17 @@ Connect agents to applications, APIs, services and enterprise data. Over a thous
 - **On-premises data gateway** — for systems that never left the datacentre
 
 **Custom connector checklist:** OpenAPI definition, authentication configured (OAuth 2.0 preferred over API keys), operation descriptions written for the model not for a developer, error responses mapped to meaningful messages, throttling understood.
+
+### ⚠️ Limits & Constraints — Connectors
+
+| Limit | Value | Notes |
+|---|---|---|
+| Prebuilt connectors | **1,000+** | Standard included in most licences; Premium needs separate licence |
+| Connector payload size (public cloud) | **5 MB** | GCC plans limited to **450 KB** |
+| API calls per connection | **300 / 60 sec** | Platform-level throttle; applies to both standard and custom connectors |
+| Custom connector auth | OAuth 2.0 preferred | API key supported but discouraged for enterprise systems |
+| Premium connector licensing | Checked at **runtime** | Missing licence silently blocks the action; user sees a generic error |
+| On-premises data gateway | Required for on-prem systems | Adds latency and a deployment dependency |
 
 ---
 
@@ -104,6 +125,19 @@ Agent gathers intent and parameters
 ```
 
 Everything consequential gets this shape. It converts "the AI did something" into "a person approved something the AI proposed", which is a completely different conversation with your risk team.
+
+### ⚠️ Limits & Constraints — Agent Flows
+
+| Limit | Value | Notes |
+|---|---|---|
+| Synchronous timeout | **100–120 seconds** | Flow must return "Respond to agent" within this window or `FlowActionTimedOut` is thrown |
+| Express mode payload | **100 MB per action** | Effective limit lower; large Dataverse queries or Base64 content hit this first |
+| Logic-heavy flows in Express mode | May hit memory limit | Disable Express mode in flow details for heavy data processing |
+| Flow run quota | Daily Power Platform request limit | Every action step counts; heavy flows on high-traffic agents exhaust quota faster |
+| Dataverse standard quota | **50 RPM / 1,000 RPH** | Scales with prepaid message packs |
+| Async workaround | Send early "Respond to agent" | Return acknowledgement immediately, process heavy work asynchronously; agent cannot wait for result |
+
+> **Most common production failure:** a flow that works in testing (fast data, low volume) times out in production (real data, concurrent users). Load test before go-live.
 
 ---
 

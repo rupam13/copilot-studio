@@ -29,6 +29,15 @@ User input → match trigger phrase → run topic nodes → response
 - Scales badly. Coverage means more topics, and topics start colliding.
 - High authoring cost per intent.
 
+### ⚠️ Limits & Constraints — Topic-Based Orchestration
+
+| Limit | Value | Notes |
+|---|---|---|
+| Topics per agent | **1,000** (web) / **250** (Teams) | After this, routing becomes unreliable before hitting the cap |
+| Trigger phrase matching | Semantic (NLU) | Not exact keyword match; overlapping phrases cause ambiguous routing |
+| Turn response time | Depends on node actions | Synchronous flow calls must resolve within **100–120 seconds** |
+| Multi-intent per turn | **Not supported** | One intent per user turn; multi-intent needs generative orchestration |
+
 ---
 
 ## Generative Orchestration
@@ -68,6 +77,17 @@ It's only as good as the metadata you give it. This is where most implementation
 
 A weak tool description: `Gets data from the API.`
 A strong one: `Retrieves the current status, assigned engineer and last update timestamp for an existing incident. Use when the user references a ticket number or asks about a request they already raised. Do not use to create new incidents.`
+
+### ⚠️ Limits & Constraints — Generative Orchestration
+
+| Limit | Value | Notes |
+|---|---|---|
+| Tools visible to orchestrator | No hard published cap | But large tool lists increase latency and selection errors; keep under ~15–20 tools |
+| Tool description length | No hard limit | Aim for 2–4 sentences: when to use, what it returns, what it does NOT do |
+| Multi-step planning per turn | Model-dependent | Complex chains may time out or exhaust context |
+| Non-determinism | Inherent | Same input can produce different tool-selection paths; test with rates, not pass/fail |
+| Context window per turn | Total payload: instructions + history + tools + KB | Exceeding this silently truncates early conversation turns |
+| Migration risk | **Immediate** on switch | Flipping generative orchestration on breaks existing trigger-phrase routing; topic descriptions must be written first |
 
 ---
 

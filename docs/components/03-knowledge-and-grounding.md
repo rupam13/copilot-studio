@@ -34,6 +34,21 @@ Trusted information the agent uses to ground its responses. Typical sources:
 
 **5. Freshness is a design decision.** Uploaded files are a point-in-time snapshot. Live sources update themselves. Choose deliberately and document which is which.
 
+### ⚠️ Limits & Constraints — Knowledge Sources
+
+| Limit | Value | Notes |
+|---|---|---|
+| Knowledge sources per agent | **500** | All types combined |
+| Uploaded file size | **512 MB** per file | Lower for SharePoint without M365 Copilot licence (see below) |
+| SharePoint file size (no M365 Copilot licence) | **~7 MB** | Memory constraint; larger files fail to process |
+| SharePoint site URLs | **25 per agent** | When using generative orchestration |
+| Supported file formats | DOCX, PPTX, PDF, XLSX, TXT, CSV, MD, JSON | Password-protected or sensitivity-labelled files are **not** indexed |
+| SharePoint sync freshness | **Every 4–6 hours** | Manual uploads are static — re-upload when content changes |
+| Retrieval depth per query | **Top 3–5 chunks** | Not designed to scan entire libraries; chunk and focus your sources |
+| Connector payload (public cloud) | **5 MB** | GCC plans limited to 450 KB |
+
+> **Common failure:** pointing at an entire SharePoint site rather than a curated library causes the retrieval layer to surface drafts, superseded versions and noise. Scope tightly.
+
 ---
 
 ## Generative Answers
@@ -64,6 +79,17 @@ Work through this in order — the cause is almost never further down than step 
 5. **Are instructions fighting the source?** An instruction to "be helpful and give a complete answer" pushes the model to fill gaps.
 6. **Is general-knowledge fallback on?** Turn it off.
 7. *Only now* consider the model.
+
+### ⚠️ Limits & Constraints — Generative Answers
+
+| Limit | Value | Notes |
+|---|---|---|
+| Prompt customisation field | **8,000 chars** | Same cap as agent instructions |
+| Knowledge sources in scope | Up to agent limit (500) | Scoping to fewer improves precision |
+| General-knowledge fallback | Off by default for enterprise | Explicit setting — verify before deploying |
+| Response generation time | **2–10 seconds** | Increases with number of sources and complexity |
+| Citation support | Configurable | Off by default on some channels; turn on for enterprise trust |
+| Unsupported content types | Password-protected, sensitivity-labelled docs | These are silently skipped — no error shown to user |
 
 ---
 

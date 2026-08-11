@@ -49,6 +49,18 @@ Use pipelines when you want governed deployment with low overhead. Use ADO/GitHu
 
 **Either way, the rule is the same: no manual edits in production. Ever.**
 
+### ⚠️ Limits & Constraints — Environments & Solutions
+
+| Limit | Value | Notes |
+|---|---|---|
+| Environments per tenant | Limited by licence | Sandbox environments limited by Power Platform capacity |
+| Default environment | **Shared, permissive DLP** | Never build production agents in the default environment |
+| Solution component limit | Very large (thousands) | Practical limit is performance of export/import; keep solutions focused |
+| Managed solution edit | **Blocked** | Managed solutions in test/prod cannot be directly edited; changes must go through dev |
+| Connection references | Required per connector | Missing connection reference = deployment failure in new environment |
+| Environment variables | Required for all config | Hard-coded URLs, IDs, emails in topics = broken in prod |
+| Pipeline approval gates | Configurable | Skipping approval gates removes the audit trail your security team will ask for |
+
 ---
 
 ## Testing & Evaluations
@@ -135,6 +147,7 @@ Deploy agents across Teams, Microsoft 365 Copilot, websites and applications.
 | **Website (custom or demo canvas)** | Customer-facing, public | Needs explicit auth design; watch anonymous abuse |
 | **Custom app / mobile / SDK** | Embedded experiences | Most control, most work |
 | **Voice / telephony** | Contact centre | Rewrite responses for speech — visual output reads terribly aloud |
+| **WhatsApp** | External reach (GA as of late 2025) | Feature parity varies; test all interactions end-to-end |
 | **Other messaging platforms** | External reach | Feature parity varies by channel |
 
 **Channel design is not a deployment step, it's a design constraint:**
@@ -144,6 +157,19 @@ Deploy agents across Teams, Microsoft 365 Copilot, websites and applications.
 - Voice needs short sentences, no bullets, no markdown, no URLs read aloud.
 - Auth behaves differently per channel — SSO in Teams, explicit sign-in on web.
 - **Test in every channel you publish to.** Not just the one you built in.
+
+### ⚠️ Limits & Constraints — Publishing & Channels
+
+| Limit | Value | Notes |
+|---|---|---|
+| Channels supported | Teams, M365 Copilot, Web, Custom App, Voice, WhatsApp, others | Feature parity **not equal** across channels; test each separately |
+| Rich card support | Teams + M365 only (full) | Adaptive cards degrade to plain text in other channels |
+| Response length (voice) | Short sentences only | Markdown, bullets, URLs are read literally by TTS — rewrite for speech |
+| SSO support | Teams + M365 Copilot only | All other channels require explicit auth prompt |
+| Anonymous/public web | Requires "No auth" mode | Rate-limiting and abuse prevention must be designed separately |
+| Publishing trigger | Manual from editor or pipeline | No auto-publish on save; unpublished changes are invisible to users |
+| Rollback | Solution version restore | Know how to do this before 6pm Friday — not during an incident |
+| DLP channel restrictions | Admin-enforced | DLP can block publication to specific channels |
 
 ### Publishing
 

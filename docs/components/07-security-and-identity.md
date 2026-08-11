@@ -42,6 +42,17 @@ SSO removes the sign-in prompt inside Teams and M365 Copilot, where the user is 
 - Sensitive variables should be cleared once the flow needing them completes.
 - Test as a low-privilege user. Testing as yourself, an environment maker, tells you almost nothing about what a normal user experiences.
 
+### ⚠️ Limits & Constraints — Authentication
+
+| Limit | Value | Notes |
+|---|---|---|
+| Auth modes available | 3 (None, Microsoft, Manual OAuth 2.0) | "None" is public access; only use for truly non-sensitive bots |
+| SSO availability | Teams + M365 Copilot only | Not available in all channels; auth prompt appears in others |
+| Token expiry handling | Must be authored explicitly | Expired tokens and revoked consent produce dead-ends with no default user message |
+| Per-user vs service identity | Design decision, not default | Defaulting to service (maker) context over sensitive data = data exposure incident |
+| OAuth 2.0 PKCE | Supported | Recommended for custom auth; implicit flow deprecated |
+| Conditional Access enforcement | Via Entra ID | Configure in Power Platform admin center; not in Copilot Studio directly |
+
 ---
 
 ## Security & Governance
@@ -97,6 +108,20 @@ Not a policy PDF — a set of build decisions:
 □ Named owner for the agent itself, documented
 □ Decommission plan (nobody ever writes this — write it)
 ```
+
+### ⚠️ Limits & Constraints — Security & Governance
+
+| Limit | Value | Notes |
+|---|---|---|
+| DLP policy scope | Tenant or environment level | Makers cannot override; connectors in different DLP groups cannot combine |
+| DLP connector groups | Business / Non-Business / Blocked | An enterprise source + an external service = blocked if in different groups |
+| Audit log retention | Microsoft Purview policy | Configure before deployment; cannot retroactively capture what wasn't logged |
+| Sharing controls | Admin-configurable | Uncontrolled sharing turns a prototype into a tenant-wide dependency with no owner |
+| Rate limit enforcement | **50–8,000 RPM** (plan-dependent) | Exceeded quota = users see failure notice; no graceful degradation by default |
+| Message packs (1–10) | 50 RPM / 1,000 RPH | Lowest capacity tier |
+| Message packs (11–50) | 80 RPM / 1,600 RPH | Mid capacity |
+| Message packs (51–150) | 100 RPM / 2,000 RPH | Higher capacity |
+| Licensing currency (from Sep 2025) | **Copilot Credits** | Replaces "messages"; consumed per orchestration turn, knowledge retrieval, and action call |
 
 ---
 

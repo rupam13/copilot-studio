@@ -59,6 +59,17 @@ Split by **domain and ownership**, not by function. "Search agent / write agent 
 
 **Don't split until you need to.** Two clear domains and a small team? One agent. Split when scope conflict, ownership conflict or evaluation noise makes it necessary — the signals in [Foundation](01-foundation.md).
 
+### ⚠️ Limits & Constraints — Connected Agents
+
+| Limit | Value | Notes |
+|---|---|---|
+| Connected child agents per orchestrator | No published hard cap | Each hop adds latency; keep chains shallow (1–2 levels) |
+| Context passed to child agent | What orchestrator explicitly passes | Child does **not** receive full conversation history by default |
+| Latency per hop | +seconds per agent | Orchestrator + child reasoning both consume time; test end-to-end latency |
+| Consumption | Billed per agent reasoning | Orchestrator turn + each child turn = multiple message credits |
+| Cross-environment agent connection | Supported | Requires admin approval and connection setup in each environment |
+| Child agent standalone requirement | Must work independently | Test and deploy children without the orchestrator; orchestrator should own routing only |
+
 ---
 
 ## Memory
@@ -90,6 +101,17 @@ Bad: anything sensitive that doesn't need to persist, anything that goes stale s
 6. **What happens when it's wrong?** Stale memory produces confidently wrong personalisation, which erodes trust faster than no memory at all.
 
 **Design principle:** memory should reduce repetition, not accumulate a profile. Remember the preference; don't remember the person.
+
+### ⚠️ Limits & Constraints — Memory
+
+| Limit | Value | Notes |
+|---|---|---|
+| Default session scope | Single conversation | Variables reset when the session ends unless cross-session memory is explicitly enabled |
+| Cross-session memory | Platform feature (M365 Copilot context) | Not available in all channels or licensing tiers |
+| Memory retention policy | Admin-configured | No automatic TTL on memories; must be explicitly set via Microsoft Purview or Power Platform admin |
+| User control | User can view, edit, delete | Required for responsible AI; must be implemented and surfaced in your channel |
+| Context leakage risk | High if unchecked | Memory from a private HR conversation must not surface in a team/public channel — design boundary explicitly |
+| Stale memory risk | Silently wrong personalisation | A stale preference (role change, project closed) erodes trust faster than no memory |
 
 ---
 
