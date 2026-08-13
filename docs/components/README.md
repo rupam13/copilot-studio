@@ -21,6 +21,7 @@ These pages group components by **the decision they serve**. You configure a fam
 | 9 | [Adaptive Cards](09-adaptive-cards.md) | Card JSON, Input elements, Actions, Dynamic cards, Channel rendering | How do I make the conversation visually rich and interactive? |
 | 10 | [ALM Deep Dive](10-alm-deep-dive.md) | Environment setup, Solutions step-by-step, Pipelines, PAC CLI, Git, CI/CD, Versioning, Checklists | How do I manage the full delivery lifecycle end-to-end? |
 | 11 | [VS Code Extension](11-vscode-extension.md) | YAML topics, PAC CLI, Git workflow, CI/CD pipelines, IntelliSense, Feature branch workflow | How do I build agents like a developer with full Git governance? |
+| 12 | [What's New 2025–2026](12-whats-new-2025-2026.md) | Copilot Credits, GPT-5, Computer Use, MCP, Microsoft IQ, Skills, Voice, Agent 365, Entra Agent ID, Evaluation, WhatsApp | What has changed, what's new, and how does it affect how I build? |
 
 ---
 
