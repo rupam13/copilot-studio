@@ -24,6 +24,16 @@ Connector = the capability definition; travels with the solution. Connection = t
 **Entity vs variable?**
 An entity extracts a structured value from user text. A variable stores a value for reuse. Entities produce; variables hold.
 
+**Connected agent vs child agent?**
+They refer to the same architectural concept, but "Connected Agent" is the modern Copilot Studio terminology. An orchestrator agent routes requests to a "connected agent" (formerly known as a child bot or skill). The connected agent is a fully standalone agent with its own domain knowledge, tools, and lifecycle.
+
+**End-user access vs Maker-provided access?**
+When configuring connections (like Power Automate or Connectors): "End-user" access means the agent prompts the user to authenticate, and actions run in the context of the user, enforcing their exact permissions. "Maker-provided" (Service Principal) means the agent uses a shared credential for all users. 
+*Good Practice:* Always use end-user credentials for data like emails, HR records, or CRM. Only use maker-provided access for generic, read-only system lookups (like querying a public weather API) and always apply least-privilege.
+
+**Authenticate node?**
+A specific node you can place inside a topic to force the user to sign in before continuing. If the user is already authenticated (e.g., via Teams SSO), it silently succeeds. If not, it presents a sign-in card. It secures sensitive topic branches and returns an auth token that can be passed to downstream APIs.
+
 ---
 
 ## Tier 2 — the discriminating questions
