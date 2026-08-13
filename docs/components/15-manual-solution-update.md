@@ -25,22 +25,29 @@ Cloning takes your base solution and **rolls up** all existing patches into a br
 When an urgent fix is needed in Production, follow these steps in your Development environment:
 
 **STEP P-1 — Create the Patch**
-1. In your **Dev Environment**, go to Solutions.
-2. Select your base solution (do not open it, just select the radio button/checkbox).
-3. Click **Clone** from the top menu, then select **Clone a Patch**.
-4. The system will prompt you for a version number (it auto-increments the build/revision).
-5. Click **Save**. A new solution appears named `YourSolutionName_Patch_hexcode`.
+```
+• In your Dev Environment, go to Solutions
+• Select your base solution (do not open it, just select the radio button/checkbox)
+• Click Clone from the top menu → select Clone a Patch
+• The system will prompt you for a version number (it auto-increments the build/revision)
+• Click Save
+□ Result: A new solution appears named YourSolutionName_Patch_hexcode
+```
 
 **STEP P-2 — Add Components to the Patch**
-1. Open the newly created Patch solution.
-2. Click **Add existing** → select the Copilot Studio Agent or specific sub-components (like a specific flow) that need fixing.
-3. Make your urgent edits directly within this patch solution.
+```
+• Open the newly created Patch solution
+• Click Add existing → select the Copilot Studio Agent or specific sub-components that need fixing
+• Make your urgent edits directly within this patch solution
+```
 
 **STEP P-3 — Export and Import the Patch**
-1. **Export** the Patch solution as **Managed**.
-2. Go to your **Test/Prod Environment**.
-3. **Import** the Managed Patch solution.
-4. The target environment now runs the base solution + the patch overrides.
+```
+• Export the Patch solution as Managed
+• Go to your Test/Prod Environment
+• Import the Managed Patch solution
+□ Verify: The target environment now runs the base solution + the patch overrides
+```
 
 ---
 
@@ -49,18 +56,23 @@ When an urgent fix is needed in Production, follow these steps in your Developme
 Eventually, you will have too many patches. You need to roll them up before your next major feature release.
 
 **STEP C-1 — Clone the Solution**
-1. In your **Dev Environment**, select the base solution.
-2. Click **Clone** from the top menu, then select **Clone Solution**.
-3. The version number will automatically increment the Major or Minor version (e.g., from `1.0` to `1.1`).
-4. Click **Save**.
-5. *Result:* The base solution and all its patches are merged into a single new solution. The separate patch files are automatically deleted from your Dev environment.
+```
+• In your Dev Environment, select the base solution
+• Click Clone from the top menu → select Clone Solution
+• The version number will automatically increment the Major or Minor version (e.g., from 1.0 to 1.1)
+• Click Save
+□ Result: The base solution and all its patches are merged into a single new solution
+□ Verify: The separate patch files are automatically deleted from your Dev environment
+```
 
 **STEP C-2 — Deploy the Upgrade**
-1. **Export** the newly cloned solution as **Managed**.
-2. Go to your **Test/Prod Environment**.
-3. **Import** the Managed solution.
-4. **CRITICAL:** During import, expand the **Advanced Settings** and select **Upgrade** (this is usually the default when importing a higher version).
-5. The system will import the new version, apply it, and delete the old base solution and old patches from the target environment.
+```
+• Export the newly cloned solution as Managed
+• Go to your Test/Prod Environment
+• Import the Managed solution
+• CRITICAL: During import, expand the Advanced Settings and select Upgrade 
+□ Verify: The system will import the new version, apply it, and delete the old base solution and old patches from the target environment
+```
 
 ---
 
