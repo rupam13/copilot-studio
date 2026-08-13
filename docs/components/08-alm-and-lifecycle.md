@@ -128,7 +128,56 @@ Track usage, execution activity, outcomes, performance and improvement opportuni
 **Set up alerting** on tool failure rate, escalation spikes and latency degradation. You want to know before the users tell you.
 
 **Application Insights (Deep Monitoring):**
-Connect your agent to Azure Application Insights to get raw telemetry. This is where you can write KQL (Kusto Query Language) queries to see exact errors, custom event payloads, latency at the node level, and full conversation transcripts. Built-in analytics shows you *what* happened; Application Insights lets you debug *why* it happened.
+Connect your agent to Azure Application Insights to get raw telemetry. Built-in analytics shows you *what* happened; Application Insights lets you debug *why* it happened.
+
+### Step-by-Step: Configure Application Insights
+
+**STEP AI-1 — Create the Application Insights Resource**
+```
+1. Go to Azure Portal (portal.azure.com)
+2. Search "Application Insights" → + Create
+3. Select Subscription and Resource Group
+4. Name: e.g., "CopilotStudio-Telemetry"
+5. Region: (match your Power Platform environment region)
+6. Click Review + Create → Create
+7. Once created, go to Overview and COPY the "Connection String"
+```
+
+**STEP AI-2 — Connect Copilot Studio to Azure**
+```
+1. Open your agent in Copilot Studio
+2. Settings (top right) → Advanced
+3. Scroll to "Application Insights" section
+4. Paste the Connection String from Step AI-1
+5. Enable logging options:
+   ☑ Log conversation details (captures user ID and message text)
+   ☑ Log sensitive Activity properties (for deep troubleshooting)
+   ☑ Node execution events (tracks when specific topics trigger)
+6. Save and PUBLISH your agent.
+```
+
+**STEP AI-3 — Write KQL to Analyze Telemetry**
+```
+1. In Azure Portal, open your Application Insights resource
+2. Click "Logs" in the left menu
+3. Use KQL (Kusto Query Language) to debug.
+
+Example 1: See all conversation events in the last 7 days
+customEvents
+| where timestamp > ago(7d)
+
+Example 2: Track which topics are triggering most often
+customEvents
+| where name == "TopicTriggered"
+| extend TopicName = tostring(customDimensions.TopicName)
+| summarize Count = count() by TopicName
+| order by Count desc
+
+Example 3: Find specific errors or tool failures
+exceptions
+| where timestamp > ago(24h)
+| project timestamp, problemId, outerMessage, customDimensions
+```
 
 **The improvement loop:**
 ```
