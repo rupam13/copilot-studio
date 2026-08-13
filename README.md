@@ -24,7 +24,8 @@
 | 🔀 Decide no-code vs low-code vs pro-code | [Build Path Decision Guide](docs/guides/build-path-decision.md) |
 | 💬 Design conversations | [Conversation Design](docs/components/02-conversation-design.md) |
 | 🧠 Ground my agent in knowledge | [Knowledge & Grounding](docs/components/03-knowledge-and-grounding.md) |
-| ⚙️ Choose orchestration mode | [Orchestration](docs/components/04-orchestration.md) |
+| 🔌 Publish to Teams / Web / WhatsApp / Voice | [Channel Integration & Handoff](docs/components/13-channel-integration.md) |
+| 🤝 Hand off to ServiceNow / D365 / Zendesk | [Channel Integration & Handoff](docs/components/13-channel-integration.md) |
 | 🔌 Call APIs and automate workflows | [Actions & Tools](docs/components/05-actions-and-tools.md) |
 | 🃏 Add rich interactive UI | [Adaptive Cards](docs/components/09-adaptive-cards.md) |
 | 🚀 Ship to production | [ALM Deep Dive](docs/components/10-alm-deep-dive.md) |
@@ -42,7 +43,7 @@
 | # | Chapter | Key Topics | The Question It Answers |
 |---|---|---|---|
 | 1 | [**Foundation**](docs/components/01-foundation.md) | Agents, Instructions (8k char limit), Models, Harnesses, Build Path | *Who is this agent and how is it built?* |
-| 2 | [**Conversation Design**](docs/components/02-conversation-design.md) | Topics (1k limit), Trigger Phrases, Nodes, Variables, Entities, Conditions | *How does a conversation actually flow?* |
+| 13 | [**Channel Integration & Handoff** 🆕](docs/components/13-channel-integration.md) | Web embed, Custom Canvas, Teams, WhatsApp, Voice step-by-step + D365, ServiceNow, Zendesk handoff patterns | *How do I publish to each channel and connect to a live agent?* |
 | 3 | [**Knowledge & Grounding**](docs/components/03-knowledge-and-grounding.md) | Knowledge Sources (500 max, 512MB), Generative Answers, Grounding rules | *What is it allowed to know?* |
 | 4 | [**Orchestration**](docs/components/04-orchestration.md) | Topic-based vs Generative, Hybrid pattern, Tool descriptions | *Who decides what happens next — you or the model?* |
 | 5 | [**Actions & Tools**](docs/components/05-actions-and-tools.md) | Tools, Connectors, Agent Flows (100–120s timeout), Power Automate, Triggers | *How does it change the world outside the chat?* |
