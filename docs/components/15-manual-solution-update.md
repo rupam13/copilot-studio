@@ -76,6 +76,22 @@ Eventually, you will have too many patches. You need to roll them up before your
 
 ---
 
+## ⏪ Step-by-Step: Rollback a Patch
+
+If you deploy a patch to Production and it breaks the agent, you can quickly roll back to the previous base solution state without needing to re-deploy.
+
+**STEP R-1 — Delete the Managed Patch**
+```
+• Go to your Test/Prod Environment
+• Navigate to Solutions
+• Select the Managed Patch you just imported (e.g., YourSolutionName_Patch)
+• Click Delete from the top menu
+• Confirm the deletion
+□ Verify: The patch is removed. The environment instantly reverts to using the components from the base Managed Solution.
+```
+
+---
+
 ## ⚠️ Limits & Constraints
 
 | Limit/Constraint | Details |
