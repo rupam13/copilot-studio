@@ -5,7 +5,7 @@
 **A hands-on reference for building, governing, and shipping enterprise AI agents**
 
 [![Last Updated](https://img.shields.io/badge/Updated-August%202026-blue?style=flat-square)](https://github.com/rupam13/copilot-studio)
-[![Chapters](https://img.shields.io/badge/Chapters-12-blueviolet?style=flat-square)](docs/components/README.md)
+[![Chapters](https://img.shields.io/badge/Chapters-14-blueviolet?style=flat-square)](docs/components/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Copilot%20Studio%202025--2026-orange?style=flat-square)](https://copilotstudio.microsoft.com)
 
@@ -36,7 +36,7 @@
 
 ---
 
-## 📚 All 12 Chapters
+## 📚 All 14 Chapters
 
 ### 🔷 Core Platform (Days 1–5)
 
@@ -58,7 +58,8 @@
 | 9 | [**Adaptive Cards**](docs/components/09-adaptive-cards.md) | Card JSON, Input elements, Dynamic cards, Channel rendering (40KB limit) | *How do I make conversations visually rich and interactive?* |
 | 10 | [**ALM Deep Dive**](docs/components/10-alm-deep-dive.md) | Env setup steps, Solution build steps, Pipelines, PAC CLI, Git, CI/CD, Checklists | *How do I manage the full delivery lifecycle end-to-end?* |
 | 11 | [**VS Code Extension**](docs/components/11-vscode-extension.md) | YAML topics, PAC CLI commands, Feature branch workflow, GitHub Actions CI/CD | *How do I build agents like a developer with full Git governance?* |
-| 12 | [**What's New 2025–2026** 🆕](docs/components/12-whats-new-2025-2026.md) | Copilot Credits, GPT-5, Computer Use, MCP, Microsoft IQ, Agent 365, Entra Agent ID, Voice, WhatsApp, Evaluation | *What has changed, and how does it affect how I build?* |
+| 12 | [**What's New 2025–2026** 🆕](docs/components/12-whats-new-2025-2026.md) | Copilot Credits, GPT-5, Computer Use, MCP, Microsoft IQ, Voice, Evaluation | *What has changed, and how does it affect how I build?* |
+| 14 | [**Analytics, Monitoring & Evaluation** 🆕](docs/components/14-analytics-and-evaluation.md) | Built-in Analytics, Application Insights (KQL), Evaluation testing suites | *How do I monitor performance and systematically test quality?* |
 
 ---
 
