@@ -24,6 +24,7 @@ These pages group components by **the decision they serve**. You configure a fam
 | 12 | [What's New 2025–2026](12-whats-new-2025-2026.md) | Copilot Credits, GPT-5, Computer Use, MCP, Microsoft IQ, Skills, Voice, Agent 365, Entra Agent ID, Evaluation, WhatsApp | What has changed, what's new, and how does it affect how I build? |
 | 13 | [Channel Integration & Handoff](13-channel-integration.md) | Web embed, Custom Canvas, Teams, WhatsApp, Voice, D365 Omnichannel, ServiceNow, Zendesk — step-by-step | How do I publish to each channel and hand off to a live agent? |
 | 14 | [Analytics, Monitoring & Evaluation](14-analytics-and-evaluation.md) | Built-in Analytics, Application Insights (KQL), Evaluation testing, Regression suites | How do I monitor performance and systematically evaluate quality? |
+| 15 | [Manual Solution Update](15-manual-solution-update.md) | Solution Patching, Solution Cloning, Hotfixes, Roll-ups | How do I deploy a quick fix without deploying the entire solution? |
 
 ---
 

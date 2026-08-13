@@ -5,7 +5,7 @@
 **A hands-on reference for building, governing, and shipping enterprise AI agents**
 
 [![Last Updated](https://img.shields.io/badge/Updated-August%202026-blue?style=flat-square)](https://github.com/rupam13/copilot-studio)
-[![Chapters](https://img.shields.io/badge/Chapters-14-blueviolet?style=flat-square)](docs/components/README.md)
+[![Chapters](https://img.shields.io/badge/Chapters-15-blueviolet?style=flat-square)](docs/components/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Copilot%20Studio%202025--2026-orange?style=flat-square)](https://copilotstudio.microsoft.com)
 
@@ -36,7 +36,7 @@
 
 ---
 
-## 📚 All 14 Chapters
+## 📚 All 15 Chapters
 
 ### 🔷 Core Platform (Days 1–5)
 
@@ -60,6 +60,7 @@
 | 11 | [**VS Code Extension**](docs/components/11-vscode-extension.md) | YAML topics, PAC CLI commands, Feature branch workflow, GitHub Actions CI/CD | *How do I build agents like a developer with full Git governance?* |
 | 12 | [**What's New 2025–2026** 🆕](docs/components/12-whats-new-2025-2026.md) | Copilot Credits, GPT-5, Computer Use, MCP, Microsoft IQ, Voice, Evaluation | *What has changed, and how does it affect how I build?* |
 | 14 | [**Analytics, Monitoring & Evaluation** 🆕](docs/components/14-analytics-and-evaluation.md) | Built-in Analytics, Application Insights (KQL), Evaluation testing suites | *How do I monitor performance and systematically test quality?* |
+| 15 | [**Manual Solution Update**](docs/components/15-manual-solution-update.md) | Solution Patching, Cloning, Roll-ups, Hotfix deployment | *How do I push a bug fix without deploying the entire solution?* |
 
 ---
 
