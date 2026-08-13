@@ -6,6 +6,8 @@ End-to-end governance: from an idea on a developer's screen to a production-grad
 
 ## What Is ALM in Copilot Studio?
 
+*Video Reference: [Copilot Studio | Application Lifecycle Management (ALM) (Part - 16)](https://www.youtube.com/watch?v=3TK_J5H3W9s)*
+
 ALM is the complete discipline of managing how your agent travels from development to production in a controlled, repeatable, auditable way. In Copilot Studio, ALM is built on Power Platform primitives: **Environments**, **Solutions**, **Connection References**, **Environment Variables**, and **Pipelines**.
 
 ### The Four ALM Commandments

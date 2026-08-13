@@ -67,6 +67,8 @@ Use pipelines when you want governed deployment with low overhead. Use ADO/GitHu
 
 Measure agent behaviour, response quality, reliability and task performance.
 
+*Video Reference: [Copilot Studio | Analytics, Application Insights Monitoring and Evaluation (Part - 15)](https://www.youtube.com/watch?v=NjQ-2xcqvl8)*
+
 ### The levels
 
 **1. Playground testing (development)**
@@ -114,6 +116,8 @@ See below. Testing never actually ends.
 
 Track usage, execution activity, outcomes, performance and improvement opportunities.
 
+*Video Reference: [Copilot Studio | Analytics, Application Insights Monitoring and Evaluation (Part - 15)](https://www.youtube.com/watch?v=NjQ-2xcqvl8)*
+
 **Read analytics for four things:**
 
 1. **Coverage gaps** — what are users asking that falls through to fallback? This is your topic and knowledge backlog, written by the users themselves. It's the highest-value report in the product.
@@ -122,6 +126,9 @@ Track usage, execution activity, outcomes, performance and improvement opportuni
 4. **Business outcome** — deflection, hours saved, cycle time reduced. Translate to the language your sponsor uses, or the agent quietly loses funding at the next review.
 
 **Set up alerting** on tool failure rate, escalation spikes and latency degradation. You want to know before the users tell you.
+
+**Application Insights (Deep Monitoring):**
+Connect your agent to Azure Application Insights to get raw telemetry. This is where you can write KQL (Kusto Query Language) queries to see exact errors, custom event payloads, latency at the node level, and full conversation transcripts. Built-in analytics shows you *what* happened; Application Insights lets you debug *why* it happened.
 
 **The improvement loop:**
 ```
