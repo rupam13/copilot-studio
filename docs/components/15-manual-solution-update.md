@@ -92,6 +92,32 @@ If you deploy a patch to Production and it breaks the agent, you can quickly rol
 
 ---
 
+## ⏪ Step-by-Step: Rollback a Major Upgrade (Clone)
+
+Unlike a patch, an *Upgrade* (Clone) deletes the previous version of your solution in the target environment. You cannot simply "delete" the new version to revert, because the old version is already gone. 
+
+To roll back a major upgrade, you must deploy the *previous* state as a *new* update.
+
+**STEP RM-1 — Revert the Code in Dev (or Source Control)**
+```
+• If using Source Control (Git): Revert your main branch to the commit before the upgrade
+• If manually managing Dev: Import your unmanaged backup of the previous version into Dev
+• Open the Solution in Dev and increment the version number to be HIGHER than the broken production version (e.g., if broken Prod is 1.1.0.0, make the rollback version 1.1.0.1)
+```
+
+**STEP RM-2 — Export and Deploy the Rollback**
+```
+• Export the reverted solution as Managed
+• Go to your Test/Prod Environment
+• Import the Managed solution
+• Expand Advanced Settings and select Upgrade
+□ Verify: The system imports the old components (packaged as a new version) and overwrites the broken configuration
+```
+
+> **Data Loss Warning:** If the major upgrade caused catastrophic data loss in Dataverse tables, deploying a rollback solution will NOT restore the deleted data. You must instead perform a Point-in-Time Environment Restore from the Power Platform Admin Center to roll back the entire environment's database to before the import.
+
+---
+
 ## ⚠️ Limits & Constraints
 
 | Limit/Constraint | Details |
