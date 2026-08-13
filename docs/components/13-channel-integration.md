@@ -260,6 +260,48 @@ Must be served over HTTPS — Direct Line rejects HTTP origins
 
 ---
 
+### Deep Dive: Web Channel with Single Sign-On (Entra ID)
+*Implementing SSO ensures users logged into your M365 environment or corporate portal don't have to manually sign into the agent again. This pattern is based on standard Microsoft identity implementations (commonly demonstrated by MVPs like Matthew Devaney).*
+
+**1. Create the App Registration in Azure AD (Entra ID)**
+* Go to Azure Portal → App Registrations → New Registration.
+* Name it (e.g., `CopilotStudio-WebSSO`).
+* Set supported account types (usually single tenant for internal apps).
+* Set the **Redirect URI** to `Single-page application (SPA)` and point it to the URL where your web chat will be hosted (e.g., `https://your-domain.com/chat.html`).
+
+**2. Configure API Permissions**
+* In your App Registration, go to **API Permissions** → Add a permission.
+* Add the **PowerApps Runtime Service** permission.
+* Ensure you grant Admin Consent for the tenant so users aren't prompted.
+
+**3. Configure Authentication in Copilot Studio**
+* Go to your Agent → Settings → Security → Authentication.
+* Select **Authenticate manually** (or standard Entra ID depending on the exact build version).
+* Enter the Client ID and Tenant ID from the Azure App Registration.
+* Enter your Token Exchange URL (also from Azure).
+
+**4. The Client-Side SSO Handshake (`settings.js`)**
+Instead of just sending a Direct Line token, your custom canvas must first use MSAL (Microsoft Authentication Library) to grab an Entra ID token, and exchange it with the bot.
+
+```javascript
+// Example conceptual flow for settings.js
+// 1. Initialize MSAL
+const msalConfig = { auth: { clientId: "YOUR_CLIENT_ID", authority: "https://login.microsoftonline.com/YOUR_TENANT" } };
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+// 2. Login & Get Token
+const response = await msalInstance.loginPopup({ scopes: ["api://YOUR_CLIENT_ID/access_as_user"] });
+const userToken = response.accessToken;
+
+// 3. Exchange Token with Direct Line
+// Send the userToken inside the OAuthCard interceptor so the bot recognizes the user instantly.
+```
+
+**5. Host the Web App**
+Since it's a Single-page Application using MSAL, host your HTML/JS files securely. Azure Blob Storage (Static website hosting) or Azure Static Web Apps are excellent, low-cost options for this.
+
+---
+
 ## 👥 Channel 3 — Microsoft Teams
 
 ### Steps
