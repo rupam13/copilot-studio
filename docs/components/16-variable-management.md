@@ -30,37 +30,48 @@ Copilot Studio is strongly typed, meaning a variable must know what kind of data
 *   **Record (Object):** A complex JSON-like object with properties. ` { Name: "John", Age: 30 } `
 *   **Table (Array):** A list of items or records. ` [ "Apple", "Banana" ] ` or ` [ { ID: 1 }, { ID: 2 } ] `
 
----
+## ⚡ 3. The Variable Management Nodes
 
-## ⚡ 3. Manipulating Data with Power Fx
+Copilot Studio provides specific authoring nodes under the **Variable management** menu to handle memory. Here is how to use each one:
 
-Copilot Studio uses **Power Fx** (the same formula language used in Excel and Power Apps) to manipulate variables. You can write formulas directly in the "Set Variable Value" node.
-
-### Common Power Fx Scenarios in Copilot Studio
-
-**STEP V-1 — String Concatenation & Manipulation**
-```powerapps-dot
-• Combine text: 
-  Concatenate("Hello, ", Global.UserName, ". How can I help?")
-• Make uppercase: 
-  Upper(Topic.UserCity)
+**NODE: Set a variable value**
+```
+• Add node: Variable management → Set a variable value
+• Create a new variable (e.g., Topic.UserName) or select an existing one
+• Assign a value:
+  - Text: Directly type a string (e.g., "John Doe")
+  - Formula: Click the 'fx' icon to write Power Fx (e.g., Concatenate("Hello, ", Global.UserName))
+  - Reference: Select another variable to copy its value
 ```
 
-**STEP V-2 — Math & Logic**
-```powerapps-dot
-• Calculate a discount: 
-  Topic.OrderTotal * 0.85
-• Check if an array is empty: 
-  IsEmpty(Topic.List_of_Tickets)
+**NODE: Parse value (Parse JSON)**
+When you call an HTTP endpoint or Power Automate flow that returns a stringified JSON payload, the bot sees it as flat text. You must parse it into a Record so the bot can read the properties.
+```
+• Add node: Variable management → Parse value
+• 'Value to parse': Select the string variable containing the JSON (e.g., Topic.API_Response_String)
+• 'Data type': Click 'From sample data' and paste a sample of your JSON. The platform will automatically generate the schema.
+• 'Save as': Save the output as a new Record variable (e.g., Topic.ParsedRecord)
+□ Verify: You can now access properties using dot notation: Topic.ParsedRecord.customer.email
 ```
 
-**STEP V-3 — Parsing JSON into a Record**
-If you call an HTTP node or Power Automate flow that returns a stringified JSON payload, you must parse it before the bot can read the properties.
-```powerapps-dot
-• Parse JSON:
-  ParseJSON(Topic.API_Response_String)
-• Access a property of that record:
-  Topic.ParsedRecord.customer.email
+**NODE: List management**
+If you have an array of items (like a list of recent support tickets), you can manipulate it using the List management node without writing complex Power Fx.
+```
+• Add node: Variable management → List management
+• Choose an operation:
+  - 'Add item to list': Appends a new item to an existing array
+  - 'Remove item from list': Removes a specific item
+  - 'Clear list': Empties the array
+• Select your target Table/Array variable (e.g., Topic.TicketList)
+• Provide the item to add/remove
+```
+
+**NODE: Clear all variable values**
+Sometimes you need to reset the conversation completely (e.g., the user clicks "Start Over" or finishes a transaction).
+```
+• Add node: Variable management → Clear all variable values
+• This node instantly wipes all 'Topic' and 'Global' variables in the current session.
+• WARNING: Be careful using this in the middle of a flow, as it will destroy authentication tokens stored in Global variables, forcing the user to log in again!
 ```
 
 ---
