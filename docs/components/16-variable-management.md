@@ -133,4 +133,48 @@ If you are storing passwords, social security numbers, or OAuth tokens in variab
 
 ---
 
+## ⚡ 7. Power Fx in Detail
+
+Power Fx is the low-code language used across the Power Platform. In Copilot Studio, it allows you to manipulate strings, calculate dates, evaluate complex logic, and work with arrays without calling an external Power Automate flow.
+
+### A. String Manipulation
+When you need to clean up user input or format a response:
+*   **`Concatenate(text1, text2)`**: Joins strings together. Example: `Concatenate("Hi ", Topic.UserName, "!")`
+*   **`Lower(text) / Upper(text)`**: Converts text casing.
+*   **`Trim(text)`**: Removes leading/trailing spaces.
+*   **`Substitute(text, oldText, newText)`**: Replaces parts of a string. Example: `Substitute(Topic.Email, "@gmail.com", "")`
+*   **`Split(text, separator)`**: Converts a string into a Table (array) based on a separator.
+
+### B. Date & Time
+Working with dates is extremely common for booking and scheduling agents:
+*   **`Now()`**: Returns the current date and time.
+*   **`Today()`**: Returns the current date (time is midnight).
+*   **`DateAdd(date, value, unit)`**: Adds or subtracts time. Example: `DateAdd(Today(), 7, TimeUnit.Days)` (Next week).
+*   **`DateDiff(start_date, end_date, unit)`**: Finds the difference between two dates.
+*   **`Text(date, "format")`**: Formats a date into a readable string. Example: `Text(Now(), "dd-mm-yyyy hh:mm")`
+
+### C. Logic and Conditions
+Used heavily in "Condition" nodes and setting variables based on rules:
+*   **`If(condition, true_value, false_value)`**: Basic conditional branching. Example: `If(Topic.Age >= 18, "Adult", "Minor")`
+*   **`IsBlank(value)`**: Checks if a variable is empty or null. Crucial for checking if an API returned data.
+*   **`Coalesce(value1, value2)`**: Returns the first non-blank value. Useful for fallbacks: `Coalesce(Topic.ProvidedEmail, Global.AccountEmail)`
+*   **`Switch(value, match1, result1, match2, result2, default)`**: Evaluates a single value against multiple matches.
+
+### D. Table (Array) Manipulation
+When an API returns a list of items (like a list of flights or tickets):
+*   **`First(table)`**: Gets the first record in an array.
+*   **`Last(table)`**: Gets the last record.
+*   **`CountRows(table)`**: Returns the number of items in the array.
+*   **`Index(table, row_number)`**: Gets a specific row by its index number.
+*   **`Filter(table, condition)`**: Returns a new array with only the items that match the condition. Example: `Filter(Topic.Tickets, status = "Open")`
+
+### E. Type Conversion & JSON
+*   **`Value(text)`**: Converts a string number ("42") into an actual Number type.
+*   **`Text(number)`**: Converts a number into a string.
+*   **`ParseJSON(json_string)`**: Converts a raw JSON string into an untyped object that can be queried with dot notation (note: the 'Parse value' node is generally preferred for strongly-typed records).
+
+> **Best Practice:** Keep Power Fx formulas in Copilot Studio relatively simple. If you find yourself writing a 20-line nested `If()` statement with complex array mapping, it is usually better to offload that logic to a Power Automate flow or an Azure Function, as debugging massive Power Fx formulas inside the Copilot Studio canvas can be difficult.
+
+---
+
 **Back to:** [Component Reference](README.md)
