@@ -76,7 +76,31 @@ Sometimes you need to reset the conversation completely (e.g., the user clicks "
 
 ---
 
-## 🔄 4. Passing Variables to Power Automate
+## 🔀 4. Passing Variables Between Topics (In & Out)
+
+**Video Reference:** [Master Topic Variables (In & Out) with Real Examples](https://www.youtube.com/watch?v=BUJ1y_on_Jc)
+
+To avoid polluting the Global variable scope, you should use **In** and **Out** variables to pass data between modular topics. For example, a "Collect Customer Details" topic can gather an email and return it to the "Order Status" topic.
+
+**STEP T-1 — Set up an "In" Variable (Receive Value)**
+If a topic *needs* data from the outside to function, you configure an In variable.
+```
+• Open the variable properties pane for a specific Topic variable (e.g., Topic.UserEmail)
+• Check the box for: Receive values from other topics
+□ Verify: The variable is now an "In" variable. When another topic redirects to this one, it will prompt you to pass a value for Topic.UserEmail.
+```
+
+**STEP T-2 — Set up an "Out" Variable (Return Value)**
+If a topic's job is to collect or calculate data and hand it back, you configure an Out variable.
+```
+• Open the variable properties pane for a specific Topic variable (e.g., Topic.CollectedPhone)
+• Check the box for: Return values to original topics
+□ Verify: The variable is now an "Out" variable. When this topic finishes and redirects back to the caller, the caller can capture the value of Topic.CollectedPhone.
+```
+
+---
+
+## 🔄 5. Passing Variables to Power Automate
 
 When your agent needs to take action (like creating a ticket in ServiceNow), you pass variables as inputs to a Power Automate Cloud Flow.
 
@@ -96,7 +120,7 @@ When your agent needs to take action (like creating a ticket in ServiceNow), you
 
 ---
 
-## 🛡️ 5. Handling Sensitive Data (PII/Tokens)
+## 🛡️ 6. Handling Sensitive Data (PII/Tokens)
 
 If you are storing passwords, social security numbers, or OAuth tokens in variables, you must prevent them from being exposed in transcripts or Application Insights.
 
