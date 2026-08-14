@@ -169,9 +169,46 @@ When an API returns a list of items (like a list of flights or tickets):
 *   **`Filter(table, condition)`**: Returns a new array with only the items that match the condition. Example: `Filter(Topic.Tickets, status = "Open")`
 
 ### E. Type Conversion & JSON
-*   **`Value(text)`**: Converts a string number ("42") into an actual Number type.
+*   **`Value(text)`**: Converts a string number ("42") into an actual Number type. Example: `Value(Topic.AgeString) + 5`
 *   **`Text(number)`**: Converts a number into a string.
 *   **`ParseJSON(json_string)`**: Converts a raw JSON string into an untyped object that can be queried with dot notation (note: the 'Parse value' node is generally preferred for strongly-typed records).
+
+### F. Handling API Response Outputs with Power Fx (In Detail)
+When you call a Power Automate flow or an HTTP endpoint from Copilot Studio, the response often comes back as a JSON string or a complex Record/Table. Here is exactly what happens and how to handle it:
+
+**1. The Raw String Scenario (Untyped)**
+If your flow returns `{ "status": "active", "score": 95 }` as a single String output named `Topic.JSONResponse`:
+*   **What happens:** Copilot Studio treats it as flat text. You cannot write `Topic.JSONResponse.score`.
+*   **Power Fx Solution:** Use `ParseJSON()`. 
+    ```powerapps-dot
+    // 1. Set a new variable (e.g., Topic.ParsedData) using the Formula:
+    ParseJSON(Topic.JSONResponse)
+    
+    // 2. Extract values by casting the untyped object:
+    Text(Topic.ParsedData.status)   // Returns "active"
+    Value(Topic.ParsedData.score)   // Returns 95
+    ```
+
+**2. The Typed Record Scenario (Parse Value Node)**
+If you use the built-in **Parse value** node to parse the JSON string against a sample schema:
+*   **What happens:** Copilot Studio converts the string into a strongly-typed **Record** (e.g., `Topic.CustomerData`).
+*   **Power Fx Solution:** You can access the fields directly with dot notation without casting. 
+    ```powerapps-dot
+    Topic.CustomerData.status       // Returns "active" automatically
+    ```
+
+**3. Extracting from Arrays (Tables)**
+If an API returns a list of tickets: `[ { "id": 1, "title": "Login issue" }, { "id": 2, "title": "Billing" } ]` parsed into a Table variable named `Topic.TicketList`:
+*   **Get the first ticket title:** `First(Topic.TicketList).title`
+*   **Format a summary of all tickets:** 
+    ```powerapps-dot
+    Concat(Topic.TicketList, title, ", ") 
+    // Output: "Login issue, Billing"
+    ```
+*   **Check if a specific ticket exists:** 
+    ```powerapps-dot
+    If(CountRows(Filter(Topic.TicketList, id = 2)) > 0, "Ticket found", "Not found")
+    ```
 
 > **Best Practice:** Keep Power Fx formulas in Copilot Studio relatively simple. If you find yourself writing a 20-line nested `If()` statement with complex array mapping, it is usually better to offload that logic to a Power Automate flow or an Azure Function, as debugging massive Power Fx formulas inside the Copilot Studio canvas can be difficult.
 
