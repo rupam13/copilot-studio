@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Support Portal</title>
+    <title>IT Support Portal - Secured by Entra ID</title>
+    
     <!-- Microsoft Bot Framework Web Chat CDN -->
     <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    
+    <!-- Microsoft Authentication Library (MSAL) -->
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.37.1/js/msal-browser.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
@@ -25,7 +30,7 @@
         .website-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(26, 32, 44, 0.7); /* Darker techy overlay */
+            background: rgba(26, 32, 44, 0.7);
             backdrop-filter: blur(5px);
             z-index: 0;
         }
@@ -39,7 +44,7 @@
             right: 30px;
             width: 60px;
             height: 60px;
-            background-color: #1A73E8; /* Tech Blue */
+            background-color: #1A73E8;
             border-radius: 50%;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             display: flex;
@@ -78,8 +83,6 @@
             flex-direction: column;
             overflow: hidden;
             z-index: 99;
-            
-            /* Animation state */
             opacity: 0;
             transform: translateY(20px);
             pointer-events: none;
@@ -93,7 +96,7 @@
         }
 
         .chat-header {
-            background-color: #1A73E8; /* Tech Blue */
+            background-color: #1A73E8;
             color: white;
             padding: 16px;
             display: flex;
@@ -129,7 +132,7 @@
         }
 
         /* -------------------------------------------
-           4. PRE-CHAT LOGIN FORM
+           4. PRE-CHAT MICROSOFT LOGIN FORM
            ------------------------------------------- */
         #login-view {
             padding: 30px 24px;
@@ -137,65 +140,50 @@
             flex-direction: column;
             flex-grow: 1;
             background-color: #F8F9FA;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         #login-view h2 {
             margin-top: 0;
-            font-size: 18px;
+            font-size: 20px;
             color: #202124;
+            margin-bottom: 10px;
         }
 
         #login-view p {
             font-size: 14px;
             color: #5F6368;
-            margin-bottom: 24px;
+            margin-bottom: 30px;
             line-height: 1.5;
         }
 
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #3C4043;
-            margin-bottom: 6px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #DADCE0;
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            box-sizing: border-box;
-            background: white;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #1A73E8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
-        }
-
-        #start-chat-btn {
-            background-color: #1A73E8;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
+        /* Microsoft Branded Button */
+        #ms-login-btn {
+            background-color: white;
+            color: #5e5e5e;
+            border: 1px solid #8c8c8c;
+            padding: 12px 24px;
+            border-radius: 4px;
             font-size: 15px;
             font-weight: 600;
+            font-family: 'Segoe UI', 'Inter', sans-serif;
             cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
 
-        #start-chat-btn:hover {
-            background-color: #1557B0;
+        #ms-login-btn:hover {
+            background-color: #f3f2f1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #ms-login-btn img {
+            width: 20px;
+            height: 20px;
         }
 
         /* -------------------------------------------
@@ -204,8 +192,8 @@
         #webchat {
             flex-grow: 1;
             width: 100%;
-            display: none; /* Hidden until login */
-            overflow: hidden; /* Let WebChat handle its own scrolling internally */
+            display: none; 
+            overflow: hidden; 
         }
 
         .webchat__bubble--from-user .webchat__bubble__content {
@@ -219,16 +207,12 @@
             color: #202124 !important;
             border-radius: 12px 12px 12px 0px !important;
             border: 1px solid #E8EAED !important;
+            visibility: hidden; 
         }
 
         .webchat__send-box {
             border-top: 1px solid #E8EAED !important;
             flex-shrink: 0;
-        }
-
-        /* Prevent flash of full text before animation starts */
-        .webchat__bubble--from-bot .webchat__bubble__content {
-            visibility: hidden; 
         }
 
         /* -------------------------------------------
@@ -280,7 +264,6 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
-
     </style>
 </head>
 <body>
@@ -305,22 +288,15 @@
             <button class="close-btn" onclick="toggleChat()">×</button>
         </div>
         
-        <!-- Pre-Chat Login Form -->
+        <!-- Pre-Chat Microsoft Login Form -->
         <div id="login-view">
             <h2>IT Service Desk</h2>
-            <p>Please authenticate with your employee credentials to start a support session.</p>
+            <p>Please sign in with your corporate account to verify your identity.</p>
             
-            <div class="form-group">
-                <label for="username">Full Name</label>
-                <input type="text" id="username" placeholder="E.g., John Doe" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="customerId">Employee ID</label>
-                <input type="text" id="customerId" placeholder="E.g., EMP-12345" required>
-            </div>
-
-            <button id="start-chat-btn" onclick="startChat()">Start Support Session</button>
+            <button id="ms-login-btn" onclick="signInWithMicrosoft()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft Logo">
+                Sign in with Microsoft
+            </button>
         </div>
 
         <!-- The actual Web Chat Canvas -->
@@ -328,18 +304,65 @@
     </div>
 
     <script>
-        // ---------------------------------------------------------
+        // =========================================================
+        // STEP 1: MICROSOFT ENTRA ID (MSAL) CONFIGURATION
+        // =========================================================
+        // TODO: Replace these with your App Registration details
+        const msalConfig = {
+            auth: {
+                clientId: "<YOUR_CLIENT_ID>", 
+                // Use 'common' for multi-tenant/personal accounts, or your specific Tenant ID for single-tenant
+                authority: "https://login.microsoftonline.com/common",
+                redirectUri: window.location.href
+            }
+        };
+
+        const msalInstance = new msal.PublicClientApplication(msalConfig);
+        let employeeName = "";
+        let employeeId = "";
+
+        // =========================================================
         // WIDGET TOGGLE LOGIC
-        // ---------------------------------------------------------
+        // =========================================================
         function toggleChat() {
             const container = document.getElementById('chatbot-container');
             container.classList.toggle('open');
         }
 
-        // ---------------------------------------------------------
-        // WORD-BY-WORD STREAMING SIMULATION SCRIPT
-        // ---------------------------------------------------------
+        // =========================================================
+        // MICROSOFT LOGIN LOGIC
+        // =========================================================
+        async function signInWithMicrosoft() {
+            try {
+                // Trigger the secure Microsoft popup window
+                const loginResponse = await msalInstance.loginPopup({
+                    scopes: ["openid", "profile", "User.Read"]
+                });
+                
+                console.log("Successfully logged in as:", loginResponse.account.name);
+                
+                // Extract real verified identity
+                employeeName = loginResponse.account.name;
+                employeeId = loginResponse.account.username; // Usually their email/UPN
 
+                // Hide login, show chat
+                document.getElementById('login-view').style.display = 'none';
+                document.getElementById('webchat').style.display = 'flex';
+                document.getElementById('webchat').style.flexDirection = 'column';
+
+                // Launch the chat
+                startChat();
+                
+            } catch (error) {
+                console.error("Microsoft Login Failed:", error);
+                alert("Authentication failed. Please try again or contact IT.");
+            }
+        }
+
+
+        // =========================================================
+        // WORD-BY-WORD STREAMING SIMULATION SCRIPT
+        // =========================================================
         function wrapWords(element) {
             if (element.nodeType === Node.TEXT_NODE) {
                 const text = element.nodeValue;
@@ -427,71 +450,43 @@
         observer.observe(document.getElementById('chatbot-container'), { childList: true, subtree: true });
 
 
-        // ---------------------------------------------------------
-        // LOGIN & INITIALIZE WEB CHAT
-        // ---------------------------------------------------------
+        // =========================================================
+        // INITIALIZE WEB CHAT AFTER AUTH
+        // =========================================================
         async function startChat() {
-            const usernameInput = document.getElementById('username').value.trim();
-            const customerIdInput = document.getElementById('customerId').value.trim();
-
-            if(!usernameInput || !customerIdInput) {
-                alert("Please enter both Name and Employee ID to authenticate.");
-                return;
-            }
-
-            document.getElementById('login-view').style.display = 'none';
-            document.getElementById('webchat').style.display = 'flex';
-            document.getElementById('webchat').style.flexDirection = 'column';
-
-            // ========================================================
-            // SECURE TOKEN FETCH & AUTO-REFRESH LOGIC
-            // ========================================================
             let directLineObj;
-            
-            // 1. Check if this user already has an active conversation saved in their browser
-            const savedConversationId = sessionStorage.getItem(`chatHistory_${customerIdInput}`);
+            const savedConversationId = sessionStorage.getItem(`chatHistory_${employeeId}`);
             
             try {
-                // We ask our secure backend server for a temporary token!
+                // Fetch Direct Line Token from our secure backend
                 const response = await fetch('/api/getDirectLineToken');
                 if (!response.ok) throw new Error("Server not running");
                 const data = await response.json();
                 
-                // IMPORTANT: By passing { token: ... } instead of a secret, 
-                // the Microsoft SDK will AUTOMATICALLY refresh this token every 15 mins in the background!
-                
-                // 2. If they have a saved history, we reconnect to it. If not, start fresh.
                 if (savedConversationId) {
                     directLineObj = window.WebChat.createDirectLine({ 
                         token: data.token,
                         conversationId: savedConversationId 
                     });
-                    console.log("Reconnecting to existing conversation history...");
                 } else {
                     directLineObj = window.WebChat.createDirectLine({ token: data.token });
                 }
                 
-                console.log("Successfully securely fetched temporary token from backend!");
-                
             } catch (error) {
-                // PRODUCTION SECURITY ENFORCED: 
-                // We no longer fallback to a hardcoded secret. If the backend fails, the chat fails securely.
                 console.error("Critical Security Error: Backend server unreachable.", error);
-                alert("System Error: Unable to securely connect to the IT Helpdesk server. Please try again later.");
-                
-                // Re-enable the login form so the user isn't stuck on a blank screen
+                alert("System Error: Unable to securely connect to the IT Helpdesk server.");
                 document.getElementById('login-view').style.display = 'flex';
                 document.getElementById('webchat').style.display = 'none';
-                return; // Stop execution
+                return; 
             }
 
-            // 3. Save the conversation ID the moment the chat successfully connects
             directLineObj.connectionStatus$.subscribe(status => {
-                if (status === 2) { // Status 2 means "Connected"
-                    sessionStorage.setItem(`chatHistory_${customerIdInput}`, directLineObj.conversationId);
+                if (status === 2) { 
+                    sessionStorage.setItem(`chatHistory_${employeeId}`, directLineObj.conversationId);
                 }
             });
 
+            // Send silent startConversation event with VERIFIED identity
             const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
                 if (action.type === 'DIRECT_LINE/CONNECT_FULFILLED') {
                     dispatch({
@@ -500,9 +495,9 @@
                             name: 'startConversation', 
                             type: 'event',
                             value: {
-                                username: usernameInput,
-                                employeeId: customerIdInput,
-                                authStatus: "Authenticated"
+                                username: employeeName,
+                                employeeId: employeeId,
+                                authStatus: "Entra ID Authenticated"
                             }
                         }
                     });
@@ -525,8 +520,8 @@
                 {
                     directLine: directLineObj, 
                     store: store, 
-                    userID: customerIdInput, 
-                    username: usernameInput,
+                    userID: employeeId, 
+                    username: employeeName,
                     locale: 'en-US', 
                     styleOptions: styleOptions
                 },

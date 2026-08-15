@@ -1,4 +1,4 @@
 {
-  "summary":  "A README detailing the setup instructions for manual Entra ID authentication with a custom web chat canvas.",
-  "updatedAt":  "2026-08-15T13:38:30.701313100Z"
+  "summary":  "Updated README detailing the setup instructions for manual Entra ID authentication, including advanced troubleshooting for Redirect URIs, multi-tenant setup, and MSAL authority configs.",
+  "updatedAt":  "2026-08-15T14:18:10.319280300Z"
 }

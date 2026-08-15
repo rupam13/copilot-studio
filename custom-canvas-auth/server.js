@@ -3,9 +3,11 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+const PORT = 3000;
+
 // SECURE BACKEND STORAGE: Your master secret stays here, safely hidden from the browser.
 // In true production, use: const DIRECT_LINE_SECRET = process.env.DIRECT_LINE_SECRET;
-const DIRECT_LINE_SECRET = 'YOUR_DIRECT_LINE_TOKEN_HERE';
+const DIRECT_LINE_SECRET = '<YOUR_DIRECT_LINE_SECRET>';
 
 // Function to call Microsoft's API and exchange the Secret for a Temporary Token
 function generateDirectLineToken() {
@@ -69,13 +71,12 @@ const server = http.createServer(async (req, res) => {
     });
 });
 
-// Bind to port 0 (OS will assign a random available port automatically)
-server.listen(0, () => {
-    const assignedPort = server.address().port;
+// Bind to a static port so Azure AD Redirect URIs don't constantly break
+server.listen(PORT, () => {
     console.log(`\n======================================================`);
     console.log(` SECURE CHATBOT SERVER RUNNING`);
     console.log(`======================================================`);
-    console.log(` Please open your browser to: http://localhost:${assignedPort}/`);
+    console.log(` Please open your browser to: http://localhost:${PORT}/`);
     console.log(` The master secret is now securely hidden on the server!`);
     console.log(`======================================================\n`);
 });
