@@ -516,6 +516,9 @@
                 primaryFont: "'Inter', sans-serif"
             };
 
+            // Enable native browser Speech-to-Text (Microphone functionality)
+            const webSpeechPonyfillFactory = window.WebChat.createBrowserWebSpeechPonyfillFactory();
+
             window.WebChat.renderWebChat(
                 {
                     directLine: directLineObj, 
@@ -523,7 +526,8 @@
                     userID: employeeId, 
                     username: employeeName,
                     locale: 'en-US', 
-                    styleOptions: styleOptions
+                    styleOptions: styleOptions,
+                    webSpeechPonyfillFactory: webSpeechPonyfillFactory
                 },
                 document.getElementById('webchat')
             );
