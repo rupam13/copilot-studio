@@ -12,7 +12,7 @@
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.37.1/js/msal-browser.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap');
 
         /* -------------------------------------------
            1. SIMULATED TECH PORTAL BACKGROUND
@@ -21,7 +21,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Cinzel Decorative', serif;
             background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
             background-size: cover;
             overflow: hidden;
@@ -168,7 +168,7 @@
             border-radius: 4px;
             font-size: 15px;
             font-weight: 600;
-            font-family: 'Segoe UI', 'Inter', sans-serif;
+            font-family: 'Cinzel Decorative', serif;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -271,7 +271,7 @@
         /* Give the card a modern, elevated background */
         .ac-container {
             background-color: white !important;
-            font-family: 'Inter', sans-serif !important;
+            font-family: 'Cinzel Decorative', serif !important;
             border-radius: 12px !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
             padding: 16px !important;
@@ -370,39 +370,30 @@
         // MICROSOFT LOGIN LOGIC
         // =========================================================
         async function signInWithMicrosoft() {
-            // --- TEMPORARY AUTH BYPASS ---
-            console.log("Auth Bypass Enabled! Skipping Microsoft login.");
-            employeeName = "Test User (Bypass)";
-            employeeId = "test@company.local";
-
-            document.getElementById('login-view').style.display = 'none';
-            document.getElementById('webchat').style.display = 'flex';
-            document.getElementById('webchat').style.flexDirection = 'column';
-
-            startChat();
-            
-            /* ORIGINAL MSAL LOGIC (COMMENTED OUT)
             try {
+                // Trigger the secure Microsoft popup window
                 const loginResponse = await msalInstance.loginPopup({
                     scopes: ["openid", "profile", "User.Read"]
                 });
                 
                 console.log("Successfully logged in as:", loginResponse.account.name);
                 
+                // Extract real verified identity
                 employeeName = loginResponse.account.name;
-                employeeId = loginResponse.account.username;
+                employeeId = loginResponse.account.username; // Usually their email/UPN
 
+                // Hide login, show chat
                 document.getElementById('login-view').style.display = 'none';
                 document.getElementById('webchat').style.display = 'flex';
                 document.getElementById('webchat').style.flexDirection = 'column';
 
+                // Launch the chat
                 startChat();
                 
             } catch (error) {
                 console.error("Microsoft Login Failed:", error);
                 alert("Authentication failed. Please try again or contact IT.");
             }
-            */
         }
 
 
@@ -559,7 +550,7 @@
                 bubbleBorderColor: 'transparent',
                 bubbleFromUserBorderColor: 'transparent',
                 hideUploadButton: false,
-                primaryFont: "'Inter', sans-serif"
+                primaryFont: "'Cinzel Decorative', serif"
             };
 
             // Enable native browser Speech-to-Text (Microphone functionality)
