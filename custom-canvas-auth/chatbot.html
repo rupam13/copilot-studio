@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Support Portal</title>
+    <!-- Microsoft Bot Framework Web Chat CDN -->
+    <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        /* -------------------------------------------
+           1. SIMULATED TECH PORTAL BACKGROUND
+           ------------------------------------------- */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        .website-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 32, 44, 0.7); /* Darker techy overlay */
+            backdrop-filter: blur(5px);
+            z-index: 0;
+        }
+
+        /* -------------------------------------------
+           2. FLOATING WIDGET BUTTON
+           ------------------------------------------- */
+        #chat-widget-button {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #1A73E8; /* Tech Blue */
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #chat-widget-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.5);
+        }
+
+        #chat-widget-button img {
+            width: 32px;
+            height: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* -------------------------------------------
+           3. CHAT WINDOW CONTAINER
+           ------------------------------------------- */
+        #chatbot-container {
+            position: absolute;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 600px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 99;
+            
+            /* Animation state */
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #chatbot-container.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .chat-header {
+            background-color: #1A73E8; /* Tech Blue */
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-left img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: white;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* -------------------------------------------
+           4. PRE-CHAT LOGIN FORM
+           ------------------------------------------- */
+        #login-view {
+            padding: 30px 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background-color: #F8F9FA;
+        }
+
+        #login-view h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #202124;
+        }
+
+        #login-view p {
+            font-size: 14px;
+            color: #5F6368;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #3C4043;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #DADCE0;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1A73E8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        #start-chat-btn {
+            background-color: #1A73E8;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        #start-chat-btn:hover {
+            background-color: #1557B0;
+        }
+
+        /* -------------------------------------------
+           5. WEB CHAT STYLES & SCROLLING
+           ------------------------------------------- */
+        #webchat {
+            flex-grow: 1;
+            width: 100%;
+            display: none; /* Hidden until login */
+            overflow: hidden; /* Let WebChat handle its own scrolling internally */
+        }
+
+        .webchat__bubble--from-user .webchat__bubble__content {
+            background-color: #1A73E8 !important;
+            color: white !important;
+            border-radius: 12px 12px 0px 12px !important;
+        }
+
+        .webchat__bubble--from-bot .webchat__bubble__content {
+            background-color: #F1F3F4 !important;
+            color: #202124 !important;
+            border-radius: 12px 12px 12px 0px !important;
+            border: 1px solid #E8EAED !important;
+        }
+
+        .webchat__send-box {
+            border-top: 1px solid #E8EAED !important;
+            flex-shrink: 0;
+        }
+
+        /* Prevent flash of full text before animation starts */
+        .webchat__bubble--from-bot .webchat__bubble__content {
+            visibility: hidden; 
+        }
+
+        /* -------------------------------------------
+           6. CUSTOM TEXT LOADING INDICATOR
+           ------------------------------------------- */
+        .webchat__typing-indicator > * {
+            display: none !important;
+        }
+
+        .webchat__typing-indicator {
+            display: flex !important;
+            align-items: center;
+            background: transparent !important; 
+            border: none !important;
+            padding: 8px 12px !important;
+            width: fit-content !important;
+            height: 32px !important;
+            box-sizing: border-box !important;
+            margin: 5px 0 5px 10px !important;
+        }
+
+        .webchat__typing-indicator::after {
+            content: 'Agent is typing...';
+            color: #5F6368;
+            font-size: 13px;
+            font-style: italic;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* -------------------------------------------
+           7. TYPEWRITER CURSOR EFFECT
+           ------------------------------------------- */
+        .type-cursor {
+            display: inline-block;
+            width: 6px;
+            height: 16px;
+            background-color: #202124;
+            margin-left: 3px;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="website-overlay"></div>
+
+    <div id="chat-widget-button" onclick="toggleChat()">
+        <!-- IT Support Headset Icon -->
+        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006517.png" alt="Support">
+    </div>
+
+    <div id="chatbot-container">
+        <div class="chat-header">
+            <div class="header-left">
+                <!-- IT Support Headset Icon -->
+                <img src="https://cdn-icons-png.flaticon.com/512/1006/1006517.png" alt="IT Logo">
+                <div>
+                    <div>IT Support Agent</div>
+                    <div style="font-size: 11px; font-weight: 400; color: #E8EAED;">Helpdesk Portal</div>
+                </div>
+            </div>
+            <button class="close-btn" onclick="toggleChat()">×</button>
+        </div>
+        
+        <!-- Pre-Chat Login Form -->
+        <div id="login-view">
+            <h2>IT Service Desk</h2>
+            <p>Please authenticate with your employee credentials to start a support session.</p>
+            
+            <div class="form-group">
+                <label for="username">Full Name</label>
+                <input type="text" id="username" placeholder="E.g., John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customerId">Employee ID</label>
+                <input type="text" id="customerId" placeholder="E.g., EMP-12345" required>
+            </div>
+
+            <button id="start-chat-btn" onclick="startChat()">Start Support Session</button>
+        </div>
+
+        <!-- The actual Web Chat Canvas -->
+        <div id="webchat" role="main"></div>
+    </div>
+
+    <script>
+        // ---------------------------------------------------------
+        // WIDGET TOGGLE LOGIC
+        // ---------------------------------------------------------
+        function toggleChat() {
+            const container = document.getElementById('chatbot-container');
+            container.classList.toggle('open');
+        }
+
+        // ---------------------------------------------------------
+        // WORD-BY-WORD STREAMING SIMULATION SCRIPT
+        // ---------------------------------------------------------
+
+        function wrapWords(element) {
+            if (element.nodeType === Node.TEXT_NODE) {
+                const text = element.nodeValue;
+                if (text.trim() === '') return;
+                
+                const words = text.split(/(\s+)/);
+                const fragment = document.createDocumentFragment();
+                for (let i = 0; i < words.length; i++) {
+                    if (words[i] === '') continue;
+                    const span = document.createElement('span');
+                    span.textContent = words[i];
+                    span.style.display = 'none';
+                    span.className = 'type-word';
+                    fragment.appendChild(span);
+                }
+                element.parentNode.replaceChild(fragment, element);
+            } else {
+                if (element.classList && element.classList.contains('webchat__screen-reader-text')) return;
+                Array.from(element.childNodes).forEach(wrapWords);
+            }
+        }
+
+        function typeEffect(container) {
+            wrapWords(container);
+            const words = container.querySelectorAll('.type-word');
+            if (words.length === 0) {
+                container.style.visibility = 'visible';
+                return;
+            }
+
+            const cursor = document.createElement('span');
+            cursor.className = 'type-cursor';
+            container.appendChild(cursor);
+
+            container.style.visibility = 'visible';
+
+            let i = 0;
+            function typeNext() {
+                if (i >= words.length) {
+                    setTimeout(() => cursor.remove(), 800);
+                    return;
+                }
+                
+                words[i].style.display = 'inline';
+                
+                const scrollable = document.querySelector('.webchat__basic-transcript__scrollable');
+                if(scrollable) scrollable.scrollTop = scrollable.scrollHeight;
+                
+                i++;
+                
+                const delay = Math.random() * 80 + 40;
+                setTimeout(typeNext, delay);
+            }
+
+            typeNext();
+        }
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { 
+                        let bubbles = [];
+                        if (node.classList && node.classList.contains('webchat__bubble--from-bot')) {
+                            bubbles.push(node);
+                        } else {
+                            bubbles = Array.from(node.querySelectorAll('.webchat__bubble--from-bot'));
+                        }
+
+                        bubbles.forEach(bubble => {
+                            const contentContainer = bubble.querySelector('.webchat__bubble__content');
+                            
+                            if (contentContainer && !contentContainer.dataset.typed) {
+                                contentContainer.dataset.typed = "true";
+                                
+                                setTimeout(() => {
+                                    typeEffect(contentContainer);
+                                }, 50);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.getElementById('chatbot-container'), { childList: true, subtree: true });
+
+
+        // ---------------------------------------------------------
+        // LOGIN & INITIALIZE WEB CHAT
+        // ---------------------------------------------------------
+        async function startChat() {
+            const usernameInput = document.getElementById('username').value.trim();
+            const customerIdInput = document.getElementById('customerId').value.trim();
+
+            if(!usernameInput || !customerIdInput) {
+                alert("Please enter both Name and Employee ID to authenticate.");
+                return;
+            }
+
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('webchat').style.display = 'flex';
+            document.getElementById('webchat').style.flexDirection = 'column';
+
+            // ========================================================
+            // SECURE TOKEN FETCH & AUTO-REFRESH LOGIC
+            // ========================================================
+            let directLineObj;
+            
+            // 1. Check if this user already has an active conversation saved in their browser
+            const savedConversationId = sessionStorage.getItem(`chatHistory_${customerIdInput}`);
+            
+            try {
+                // We ask our secure backend server for a temporary token!
+                const response = await fetch('/api/getDirectLineToken');
+                if (!response.ok) throw new Error("Server not running");
+                const data = await response.json();
+                
+                // IMPORTANT: By passing { token: ... } instead of a secret, 
+                // the Microsoft SDK will AUTOMATICALLY refresh this token every 15 mins in the background!
+                
+                // 2. If they have a saved history, we reconnect to it. If not, start fresh.
+                if (savedConversationId) {
+                    directLineObj = window.WebChat.createDirectLine({ 
+                        token: data.token,
+                        conversationId: savedConversationId 
+                    });
+                    console.log("Reconnecting to existing conversation history...");
+                } else {
+                    directLineObj = window.WebChat.createDirectLine({ token: data.token });
+                }
+                
+                console.log("Successfully securely fetched temporary token from backend!");
+                
+            } catch (error) {
+                // PRODUCTION SECURITY ENFORCED: 
+                // We no longer fallback to a hardcoded secret. If the backend fails, the chat fails securely.
+                console.error("Critical Security Error: Backend server unreachable.", error);
+                alert("System Error: Unable to securely connect to the IT Helpdesk server. Please try again later.");
+                
+                // Re-enable the login form so the user isn't stuck on a blank screen
+                document.getElementById('login-view').style.display = 'flex';
+                document.getElementById('webchat').style.display = 'none';
+                return; // Stop execution
+            }
+
+            // 3. Save the conversation ID the moment the chat successfully connects
+            directLineObj.connectionStatus$.subscribe(status => {
+                if (status === 2) { // Status 2 means "Connected"
+                    sessionStorage.setItem(`chatHistory_${customerIdInput}`, directLineObj.conversationId);
+                }
+            });
+
+            const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
+                if (action.type === 'DIRECT_LINE/CONNECT_FULFILLED') {
+                    dispatch({
+                        type: 'WEB_CHAT/SEND_EVENT',
+                        payload: {
+                            name: 'startConversation', 
+                            type: 'event',
+                            value: {
+                                username: usernameInput,
+                                employeeId: customerIdInput,
+                                authStatus: "Authenticated"
+                            }
+                        }
+                    });
+                }
+                return next(action);
+            });
+
+            const styleOptions = {
+                botAvatarInitials: 'IT',
+                userAvatarInitials: 'You',
+                bubbleBackground: 'transparent',
+                bubbleFromUserBackground: 'transparent',
+                bubbleBorderColor: 'transparent',
+                bubbleFromUserBorderColor: 'transparent',
+                hideUploadButton: false,
+                primaryFont: "'Inter', sans-serif"
+            };
+
+            window.WebChat.renderWebChat(
+                {
+                    directLine: directLineObj, 
+                    store: store, 
+                    userID: customerIdInput, 
+                    username: usernameInput,
+                    locale: 'en-US', 
+                    styleOptions: styleOptions
+                },
+                document.getElementById('webchat')
+            );
+        }
+    </script>
+</body>
+</html>
