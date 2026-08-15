@@ -17,6 +17,25 @@ This project follows the official Microsoft security pattern:
 
 ---
 
+## 🎨 Bot Framework Web Chat SDK Features & Customizations
+
+By utilizing the Bot Framework Web Chat SDK (instead of the default iframe), you unlock total control over the user experience. Here are the features currently implemented in this repository, as well as modifications you can enable:
+
+### Features Currently Implemented in `chatbot.html`
+1. **Dynamic DOM Streaming (Word-by-Word):** An advanced `MutationObserver` intercepts Microsoft's payload and animates the text appearing on the screen word-by-word to mimic a real human typing.
+2. **Session Persistence:** Integrates with browser `sessionStorage` to save the `conversationId`. If the user accidentally refreshes the page, the entire chat history reloads instantly.
+3. **Silent Identity Injection:** Upon MSAL login, the frontend intercepts the connection pipeline and dispatches a hidden `startConversation` event, silently passing the user's mathematically verified Name and Employee ID to the Copilot Studio backend variables.
+4. **Custom CSS Overrides:** Overrides Microsoft's default strict styling to provide floating widgets, backdrop blurs, custom fonts (Inter), and tailored color palettes.
+
+### Additional Features You Can Easily Enable
+* **Adaptive Cards:** Fully supports rendering rich media, buttons, carousels, and forms directly inside the chat window.
+* **Speech-to-Text & Text-to-Speech:** Can be integrated with Azure Cognitive Services so users can physically talk to the bot using their microphone.
+* **File Uploads:** You can toggle `hideUploadButton: false` in the `styleOptions` to allow users to attach screenshots or PDFs to send to the AI.
+* **Custom React Components:** The SDK is built on React. You can override specific message bubbles to render custom HTML elements (like a live map or a dynamic calendar) instead of standard text.
+* **Localization:** Instantly translate system text by changing the `locale: 'en-US'` flag to another language (e.g., `es-ES`).
+
+---
+
 ## 📚 Advanced Learnings & Troubleshooting (Crucial)
 During the implementation of this project, several advanced Microsoft Entra ID restrictions were uncovered. If your MSAL popup fails with an "Authentication Error", check these three things:
 
