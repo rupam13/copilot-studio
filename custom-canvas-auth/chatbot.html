@@ -264,6 +264,39 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
+
+        /* -------------------------------------------
+           8. ADAPTIVE CARD MODERN STYLING
+           ------------------------------------------- */
+        /* Make the card background blend perfectly */
+        .ac-container {
+            background-color: transparent !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+        
+        /* Modernize the ugly default Microsoft buttons */
+        .ac-pushButton {
+            background-color: white !important;
+            color: #1A73E8 !important;
+            border: 1px solid #1A73E8 !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+            padding: 8px 16px !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+            margin-top: 8px !important;
+        }
+
+        .ac-pushButton:hover {
+            background-color: #1A73E8 !important;
+            color: white !important;
+            box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2) !important;
+        }
+
+        /* Fix image border radius inside cards */
+        .ac-image {
+            border-radius: 8px !important;
+        }
     </style>
 </head>
 <body>
@@ -310,8 +343,8 @@
         // TODO: Replace these with your App Registration details
         const msalConfig = {
             auth: {
-                clientId: "<YOUR_CLIENT_ID>", 
-                // Use 'common' for multi-tenant/personal accounts, or your specific Tenant ID for single-tenant
+                clientId: "4596fbf3-7ef3-4f3e-a8f6-f6c95b2dece2", 
+                // Changed from strict Tenant ID to 'common' to allow external/Outlook accounts!
                 authority: "https://login.microsoftonline.com/common",
                 redirectUri: window.location.href
             }
@@ -333,30 +366,39 @@
         // MICROSOFT LOGIN LOGIC
         // =========================================================
         async function signInWithMicrosoft() {
+            // --- TEMPORARY AUTH BYPASS ---
+            console.log("Auth Bypass Enabled! Skipping Microsoft login.");
+            employeeName = "Test User (Bypass)";
+            employeeId = "test@company.local";
+
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('webchat').style.display = 'flex';
+            document.getElementById('webchat').style.flexDirection = 'column';
+
+            startChat();
+            
+            /* ORIGINAL MSAL LOGIC (COMMENTED OUT)
             try {
-                // Trigger the secure Microsoft popup window
                 const loginResponse = await msalInstance.loginPopup({
                     scopes: ["openid", "profile", "User.Read"]
                 });
                 
                 console.log("Successfully logged in as:", loginResponse.account.name);
                 
-                // Extract real verified identity
                 employeeName = loginResponse.account.name;
-                employeeId = loginResponse.account.username; // Usually their email/UPN
+                employeeId = loginResponse.account.username;
 
-                // Hide login, show chat
                 document.getElementById('login-view').style.display = 'none';
                 document.getElementById('webchat').style.display = 'flex';
                 document.getElementById('webchat').style.flexDirection = 'column';
 
-                // Launch the chat
                 startChat();
                 
             } catch (error) {
                 console.error("Microsoft Login Failed:", error);
                 alert("Authentication failed. Please try again or contact IT.");
             }
+            */
         }
 
 
