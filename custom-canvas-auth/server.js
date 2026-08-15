@@ -3,11 +3,13 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+// Load secrets from the .env file
+require('dotenv').config();
+
 const PORT = 3000;
 
-// SECURE BACKEND STORAGE: Your master secret stays here, safely hidden from the browser.
-// In true production, use: const DIRECT_LINE_SECRET = process.env.DIRECT_LINE_SECRET;
-const DIRECT_LINE_SECRET = '<YOUR_DIRECT_LINE_SECRET>';
+// SECURE BACKEND STORAGE: Secret is safely loaded from the environment!
+const DIRECT_LINE_SECRET = process.env.DIRECT_LINE_SECRET;
 
 // Function to call Microsoft's API and exchange the Secret for a Temporary Token
 function generateDirectLineToken() {
