@@ -1,61 +1,94 @@
-# 17. Web Channel Setup (Static Website)
+# 17. Web Channel Setup with Single Sign-On (SSO)
 
-This guide provides detailed instructions on how to set up a custom web channel for your Copilot Studio agent by deploying a static website using Azure Blob Storage. 
+This guide provides detailed instructions on how to set up a custom web channel for your Copilot Studio agent and restrict access to authenticated users only via Microsoft Entra ID.
 
-These steps are extracted directly from the [Copilot Studio Web Chat SSO tutorial (16:15)](https://www.youtube.com/watch?v=dUXE4FTx9Cw&t=975s).
-
----
-
-## 🛠️ Step 1: Create an Azure Storage Account
-To host your custom web canvas, you need a place to store your HTML, CSS, and JS files.
-
-1. Go to the [Azure Portal](https://portal.azure.com/).
-2. Navigate to **Storage accounts** from the home screen.
-3. Click **Create** to spin up a new storage account.
-4. **Resource Group**: Create a new one (e.g., `web-chat-sso`) to keep these resources organized.
-5. **Storage account name**: Provide a globally unique name (e.g., `webchatssostatic`). 
-   > **Note:** The name can *only* contain lowercase letters and numbers (no spaces, dashes, or capitals).
-6. **Redundancy**: Choose **Locally-redundant storage (LRS)**. This is the cheapest option and perfectly fine for a simple web chat host or trial.
-7. Click **Review + create**, and then click **Create**.
-8. Wait a few moments for the deployment to finish, then click **Go to resource**.
+These steps are sourced from Matthew Devaney's guide: [Copilot Studio: Publish To Website With Single Sign-On](https://www.matthewdevaney.com/copilot-studio-publish-to-website-with-single-sign-on/).
 
 ---
 
-## 🌐 Step 2: Enable Static Website Hosting
-Now that the storage account exists, you need to configure it to act as a web server.
-
-1. In the left-hand menu of your new Storage Account, scroll down to the **Data management** section and click on **Static website**.
-2. Toggle the setting to **Enabled**.
-3. You will be prompted to provide two document names:
-   * **Index document name**: Type `index.html`
-   * **Error document path**: Type `404.html`
-4. Click **Save** at the top.
-5. Azure will generate a **Primary endpoint** URL (e.g., `https://webchatssostatic.z13.web.core.windows.net/`). This is the public URL where your bot will be hosted. 
-   > ⚠️ **Security Warning:** This primary endpoint is served over the public internet. Anyone who has the link can access the webpage. Ensure you are not hooking this up to a Copilot containing sensitive information without having proper authentication/SSO configured first.
+## 🔐 Step 1: Enable Microsoft Authentication in Copilot Studio
+Before publishing your agent, you must configure it to authenticate users based on their Microsoft 365 accounts.
+1. Open your agent in **Copilot Studio**.
+2. Go to the **Settings** menu and open **Authentication**.
+3. Choose the option **Authenticate with Microsoft**.
+4. Save the settings and **Publish** the agent.
 
 ---
 
-## 📂 Step 3: Upload Your Web Files
-When you enabled the static website feature, Azure automatically created a hidden container named `$web` to store your files.
+## 🛠️ Step 2: Register an Application in Microsoft Azure
+You need to register an application in Azure to authenticate users when they open the agent in a webpage.
+1. Go to the [Azure Portal](https://portal.azure.com/) and search for **App registrations**.
+2. Click **New registration**.
+3. **Name**: Provide a name, such as `Web Chat SSO (MS Authentication)`.
+4. **Supported account types**: Choose **Single tenant** only.
+5. Click **Register**.
+6. On the **Overview** page, copy the **Application (client) ID** and **Directory (tenant) ID** to a notepad—you will need them later.
 
-1. In the left-hand menu, under **Data storage**, click on **Containers**.
+---
+
+## 🔑 Step 3: Grant API Permissions
+Give the Azure application permission to invoke your Copilot Studio agent.
+1. In the App Registration menu, go to **API permissions**.
+2. Click **Add a permission**.
+3. Under the **APIs my organization uses** tab, search for and select **Power Platform API**.
+4. Choose **Delegated permissions** (so the app accesses the API as the signed-in user).
+5. Check the box for **CopilotStudio.Copilots.Invoke**.
+6. Click **Add permissions**.
+7. Click **Grant admin consent for [Your Organization]** to apply the permissions.
+
+---
+
+## 🔄 Step 4: Add a Redirect URI (Local Testing)
+Define which webpages a user can perform authentication from.
+1. In the App Registration menu, go to **Authentication**.
+2. Click **Add a platform** and select **Single-page application (SPA)**.
+3. For local testing, enter the Redirect URI: `http://localhost:5500`. *(We will add the live URL later).*
+4. Check the boxes for both **Access tokens** and **ID tokens**.
+5. Click **Configure**.
+
+---
+
+## 📥 Step 5: Download & Configure the Web Chat Client
+Microsoft provides a free web client. We will use the Node.js version.
+1. Go to the Microsoft Agents GitHub repository: [`samples/nodejs/copilotstudio-webclient/web`](https://github.com/microsoft/Agents/tree/main/samples/nodejs/copilotstudio-webclient/web).
+2. Download all files in this folder to your local machine.
+3. Rename the `settings.template.js` file to `settings.js`.
+4. Open `settings.js` in a code editor and update the connection settings properties:
+   - `appClientId`: Paste your Application (client) ID.
+   - `tenantId`: Paste your Directory (tenant) ID.
+   - `environmentId`: Found in Copilot Studio under **Settings > Advanced > Metadata**.
+   - `agentIdentifer`: Also found in Copilot Studio as the Schema name.
+
+*(Optional)*: Test the configuration on your local machine by opening `index.html` using a tool like VS Code's **Live Server** extension on port 5500.
+
+---
+
+## 🌐 Step 6: Host on Azure Blob Storage
+To host your web client live, deploy it using an Azure Blob Storage static website.
+1. In the Azure Portal, create a new **Storage account**.
+2. Choose **Standard** performance and **Locally-redundant storage (LRS)**.
+3. Once deployed, open the Storage account and scroll to **Data management > Static website**.
+4. Toggle **Static website** to **Enabled**.
+5. Set the **Index document name** to `index.html` and **Error document path** to `404.html`.
+6. Click **Save**. Azure will generate a **Primary endpoint** URL.
+
+---
+
+## 📂 Step 7: Upload Web Client Files
+1. In the Storage account left menu, go to **Data storage > Containers**.
 2. Click on the newly created **$web** container.
-3. Click the **Upload** button at the top.
-4. Open your local File Explorer (or VS Code) where your custom canvas files are stored.
-5. Select all your web files (e.g., `index.html`, scripts, CSS) and drag-and-drop them into the Azure upload pane (or use the browse button).
-6. Click **Upload**.
+3. Click **Upload** and upload all 6 of your web client files (including the configured `settings.js`).
 
 ---
 
-## 🚀 Step 4: Test Your Web Chat
-Your web files are now live and being served!
+## 🚀 Step 8: Add Redirect to the Primary Endpoint
+Now that your web client is hosted online, you must authorize its live URL in your App Registration.
+1. Go back to your Azure **App Registration** > **Authentication**.
+2. Under Single-page application, add a new **Redirect URI**.
+3. Paste the **Primary endpoint** URL generated from your Blob Storage account.
+4. Click **Save**.
 
-1. Go back to the **Static website** menu on the left.
-2. Copy the **Primary endpoint** URL.
-3. Open a new browser tab (or an incognito/guest profile).
-4. Paste the endpoint URL and hit Enter.
-5. You should now see your custom web chat canvas load successfully and connect to your Copilot Studio agent!
+Your custom web chat canvas is now live! Anyone visiting the Primary endpoint URL will be prompted to sign in using their Microsoft 365 account to chat with the agent.
 
 ---
-
 **Back to:** [Component Reference](../README.md)
