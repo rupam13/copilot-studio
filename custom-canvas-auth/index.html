@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Support Portal - Secured by Entra ID</title>
+    
+    <!-- Microsoft Bot Framework Web Chat CDN -->
+    <script crossorigin="anonymous" src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    
+    <!-- Microsoft Authentication Library (MSAL) -->
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.37.1/js/msal-browser.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="website-overlay"></div>
+
+    <div id="chat-widget-button" onclick="toggleChat()">
+        <!-- IT Support Headset Icon -->
+        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006517.png" alt="Support">
+    </div>
+
+    <div id="chatbot-container">
+        <div class="chat-header">
+            <div class="header-left">
+                <!-- IT Support Headset Icon -->
+                <img src="https://cdn-icons-png.flaticon.com/512/1006/1006517.png" alt="IT Logo">
+                <div>
+                    <div>IT Support Agent</div>
+                    <div style="font-size: 11px; font-weight: 400; color: #E8EAED;">Helpdesk Portal</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="langSwitcher" onchange="changeLanguage(event)" style="background: white; border-radius: 4px; border: 1px solid #ccc; font-size: 11px;">
+                    <option value="en-US">EN</option>
+                    <option value="es-ES">ES</option>
+                    <option value="fr-FR">FR</option>
+                </select>
+                <button class="close-btn" onclick="restartChat()" title="Clear Chat" style="font-size: 16px;">🗑️</button>
+                <button class="close-btn" onclick="downloadTranscript()" title="Save History" style="font-size: 16px;">💾</button>
+                <button class="close-btn" onclick="toggleChat()">×</button>
+            </div>
+        </div>
+        
+        <!-- Pre-Chat Microsoft Login Form -->
+        <div id="login-view">
+            <h2>IT Service Desk</h2>
+            <p>Please sign in with your corporate account to verify your identity.</p>
+            
+            <button id="ms-login-btn" onclick="signInWithMicrosoft()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft Logo">
+                Sign in with Microsoft
+            </button>
+        </div>
+
+        <!-- The actual Web Chat Canvas -->
+        <div id="webchat" role="main"></div>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+
+</body>
+</html>

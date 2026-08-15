@@ -1,0 +1,289 @@
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* -------------------------------------------
+           1. SIMULATED TECH PORTAL BACKGROUND
+           ------------------------------------------- */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            background: url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        .website-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 32, 44, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 0;
+        }
+
+        /* -------------------------------------------
+           2. FLOATING WIDGET BUTTON
+           ------------------------------------------- */
+        #chat-widget-button {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #1A73E8;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #chat-widget-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.5);
+        }
+
+        #chat-widget-button img {
+            width: 32px;
+            height: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* -------------------------------------------
+           3. CHAT WINDOW CONTAINER
+           ------------------------------------------- */
+        #chatbot-container {
+            position: absolute;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 600px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 99;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #chatbot-container.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .chat-header {
+            background-color: #1A73E8;
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-left img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: white;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        /* -------------------------------------------
+           4. PRE-CHAT MICROSOFT LOGIN FORM
+           ------------------------------------------- */
+        #login-view {
+            padding: 30px 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background-color: #F8F9FA;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #login-view h2 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #202124;
+            margin-bottom: 10px;
+        }
+
+        #login-view p {
+            font-size: 14px;
+            color: #5F6368;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Microsoft Branded Button */
+        #ms-login-btn {
+            background-color: white;
+            color: #5e5e5e;
+            border: 1px solid #8c8c8c;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Segoe UI', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        #ms-login-btn:hover {
+            background-color: #f3f2f1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #ms-login-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* -------------------------------------------
+           5. WEB CHAT STYLES & SCROLLING
+           ------------------------------------------- */
+        #webchat {
+            flex-grow: 1;
+            width: 100%;
+            display: none; 
+            overflow: hidden; 
+        }
+
+        .webchat__bubble--from-user .webchat__bubble__content {
+            background-color: #1A73E8 !important;
+            color: white !important;
+            border-radius: 12px 12px 0px 12px !important;
+        }
+
+        .webchat__bubble--from-bot .webchat__bubble__content {
+            background-color: #F1F3F4 !important;
+            color: #202124 !important;
+            border-radius: 12px 12px 12px 0px !important;
+            border: 1px solid #E8EAED !important;
+            visibility: hidden; 
+        }
+
+        .webchat__send-box {
+            border-top: 1px solid #E8EAED !important;
+            flex-shrink: 0;
+        }
+
+        /* -------------------------------------------
+           6. CUSTOM TEXT LOADING INDICATOR
+           ------------------------------------------- */
+        .webchat__typing-indicator > * {
+            display: none !important;
+        }
+
+        .webchat__typing-indicator {
+            display: flex !important;
+            align-items: center;
+            background: transparent !important; 
+            border: none !important;
+            padding: 8px 12px !important;
+            width: fit-content !important;
+            height: 32px !important;
+            box-sizing: border-box !important;
+            margin: 5px 0 5px 10px !important;
+        }
+
+        .webchat__typing-indicator::after {
+            content: 'Agent is typing...';
+            color: #5F6368;
+            font-size: 13px;
+            font-style: italic;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* -------------------------------------------
+           7. TYPEWRITER CURSOR EFFECT
+           ------------------------------------------- */
+        .type-cursor {
+            display: inline-block;
+            width: 6px;
+            height: 16px;
+            background-color: #202124;
+            margin-left: 3px;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* -------------------------------------------
+           8. ADAPTIVE CARD MODERN STYLING
+           ------------------------------------------- */
+        .ac-container {
+            background-color: white !important;
+            font-family: 'Segoe UI', serif !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+            padding: 16px !important;
+            border: 1px solid #E8EAED !important;
+        }
+        
+        .ac-pushButton {
+            background-color: white !important;
+            color: #1A73E8 !important;
+            border: 1px solid #1A73E8 !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+            padding: 8px 16px !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+            margin-top: 8px !important;
+        }
+
+        .ac-pushButton:hover {
+            background-color: #1A73E8 !important;
+            color: white !important;
+            box-shadow: 0 4px 8px rgba(26, 115, 232, 0.2) !important;
+        }
+
+        .ac-image {
+            border-radius: 8px !important;
+        }
