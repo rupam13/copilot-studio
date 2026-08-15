@@ -366,6 +366,8 @@
             container.classList.toggle('open');
         }
 
+        let msalAccessToken = "";
+
         // =========================================================
         // MICROSOFT LOGIN LOGIC
         // =========================================================
@@ -378,9 +380,10 @@
                 
                 console.log("Successfully logged in as:", loginResponse.account.name);
                 
-                // Extract real verified identity
+                // Extract real verified identity & Token for SSO
                 employeeName = loginResponse.account.name;
-                employeeId = loginResponse.account.username; // Usually their email/UPN
+                employeeId = loginResponse.account.username;
+                msalAccessToken = loginResponse.accessToken; // STORE FOR SSO
 
                 // Hide login, show chat
                 document.getElementById('login-view').style.display = 'none';
@@ -495,7 +498,7 @@
             const savedConversationId = sessionStorage.getItem(`chatHistory_${employeeId}`);
             
             try {
-                // Fetch Direct Line Token from our secure backend
+                // Fetch Direct Line Token securely from backend
                 const response = await fetch('/api/getDirectLineToken');
                 if (!response.ok) throw new Error("Server not running");
                 const data = await response.json();
@@ -523,22 +526,43 @@
                 }
             });
 
-            // Send silent startConversation event with VERIFIED identity
+            // Send silent startConversation event and intercept OAuthCards for SSO
             const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
+                
+                // 1. Send start event when connected
                 if (action.type === 'DIRECT_LINE/CONNECT_FULFILLED') {
                     dispatch({
                         type: 'WEB_CHAT/SEND_EVENT',
-                        payload: {
-                            name: 'startConversation', 
-                            type: 'event',
-                            value: {
-                                username: employeeName,
-                                employeeId: employeeId,
-                                authStatus: "Entra ID Authenticated"
-                            }
-                        }
+                        payload: { name: 'startConversation', type: 'event', value: { username: employeeName, employeeId: employeeId } }
                     });
                 }
+                
+                // 2. SSO INTERCEPTOR: Catch Sign-in Cards and auto-authenticate
+                if (action.type === 'DIRECT_LINE/INCOMING_ACTIVITY') {
+                    const activity = action.payload.activity;
+                    if (activity.type === 'message' && activity.attachments && activity.attachments.length > 0) {
+                        if (activity.attachments[0].contentType === 'application/vnd.microsoft.card.oauth') {
+                            console.log("SSO Triggered: Intercepting Bot Login Card...");
+                            
+                            // Send token to the bot silently
+                            dispatch({
+                                type: 'WEB_CHAT/SEND_EVENT',
+                                payload: {
+                                    name: 'signin/tokenExchange',
+                                    value: {
+                                        id: activity.attachments[0].content.tokenExchangeResource ? activity.attachments[0].content.tokenExchangeResource.id : undefined,
+                                        connectionName: activity.attachments[0].content.connectionName,
+                                        token: msalAccessToken
+                                    }
+                                }
+                            });
+                            
+                            // Do NOT render the login card to the user
+                            return false; 
+                        }
+                    }
+                }
+                
                 return next(action);
             });
 
@@ -572,3 +596,4 @@
     </script>
 </body>
 </html>
+
