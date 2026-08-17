@@ -8,6 +8,8 @@ This guide covers how to monitor your agent in production and systematically eva
 
 ## 📊 1. Built-in Analytics (The "Monitor" Section)
 
+![Copilot Studio Analytics Dashboard](https://learn.microsoft.com/en-us/microsoft-copilot-studio/media/analytics-improve-agent-effectiveness/analytics-card.png)
+
 The built-in analytics dashboard (Monitor section) provides an immediate overview of your agent's performance, user engagement, and conversation outcomes.
 
 ### The "H.O.U.S.E." Framework for Monitoring
