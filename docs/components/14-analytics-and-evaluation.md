@@ -6,15 +6,23 @@ This guide covers how to monitor your agent in production and systematically eva
 
 ---
 
-## 📊 1. Built-in Analytics
+## 📊 1. Built-in Analytics (The "Monitor" Section)
 
-The built-in analytics dashboard provides an immediate overview of your agent's performance, user engagement, and conversation outcomes.
+The built-in analytics dashboard (Monitor section) provides an immediate overview of your agent's performance, user engagement, and conversation outcomes.
 
-### Key Metrics to Track
-1. **Coverage Gaps:** Identifies what users are asking that falls through to fallback. This is your topic and knowledge backlog.
-2. **Failure Patterns:** Tool errors, authentication failures, timeouts.
-3. **Adoption & Engagement:** Active users, session counts, and repeat usage.
-4. **Resolution & Escalation Rates:** Did the agent resolve the issue or escalate to a human?
+### The "H.O.U.S.E." Framework for Monitoring
+To easily recall all parameters available in the Monitor section across both Conversational and Autonomous agents, use this framework:
+
+*   **H - Health:** Track Trigger success rates, Action success, and Errors (for autonomous background agents).
+*   **O - Outcomes & Effectiveness:** Monitor session results (**R.E.A.** - Resolved, Escalated, Abandoned), plus CSAT scores (1-5 stars) and AI Sentiment analysis.
+*   **U - Use:** Analyze how the bot builds answers through AI Themes, Tool usage, Knowledge Source hit rates, and Generative Answer Quality.
+*   **S - Savings & Summary:** High-level executive dashboard showing Total/Billed Sessions, Engagement Rate, and calculated ROI/Savings.
+*   **E - Extras:** Custom Metrics (up to 3 business goals) and message-level Reactions (Thumbs up/down).
+
+### Page References (Microsoft Learn)
+*   **Analytics Overview:** [Overview and Savings](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-overview)
+*   **Agent Effectiveness:** [Conversational Analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-effectiveness)
+*   **Agent Health:** [Autonomous Analytics](https://learn.microsoft.com/en-us/microsoft-copilot-studio/analytics-improve-agent-health)
 
 ### Best Practices
 *   **Identify Unhandled Intents:** Use the analytics to find clusters of user queries that the agent couldn't answer, and create new topics or add knowledge sources to address them.
